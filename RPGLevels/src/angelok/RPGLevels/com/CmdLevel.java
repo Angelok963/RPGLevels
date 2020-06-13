@@ -489,7 +489,7 @@ public class CmdLevel implements CommandExecutor {
 			clas = (isOnline) ? rpg.getPclass() : DataManager.getPlayerDataString(args[1], "class");
 
 			if (clas.isEmpty())
-				clas = "Не выбран";
+			 	clas = "Не выбран";
 
 			double maxMana = (!clas.equals("Не выбран")) ? (RPGLevels.rpgclass.get(clas).getDefaultmana()
 					+ (RPGLevels.rpgclass.get(clas).getChangemanatolvl() * (lvl - 1))) : 0.0;
