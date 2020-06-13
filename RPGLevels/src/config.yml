@@ -1,0 +1,27 @@
+firstspawn: 'world:0:100:0:0:0'
+rpgspawn: 'world:0:100:0:0:0'
+AutoSaveDataModule:
+  enabled: true
+  period: 5
+  broadcasted: true
+StorageType: 'file'
+#Если выбран MySql
+MySQLProperties:
+  ip: 'localhost'
+  port: 3306
+  user: 'root'
+  password: '*****'
+  DBname: 'db_name'
+Levels:
+  '1':
+    commands: {}
+    cost: 0
+  '2':
+    cost: 15
+    commands:
+    - say {Player} ты топер
+  '3':
+    cost: 71
+    commands:
+    - say идеал...
+Attributes: {}

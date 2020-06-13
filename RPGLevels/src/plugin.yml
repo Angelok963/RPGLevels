@@ -1,0 +1,17 @@
+name: RPGLevels
+main: angelok.RPGLevels.com.RPGLevels
+version: 1.0
+author: [Angelok]
+commands:
+    level:
+        description: Управление плагином RPGLevels
+    class:
+        description: Выбор класса
+    classcreate:
+        description: Создание нового класса
+    classremove:
+        description: Удаление класса
+    classinfo:
+        description: Получить информацию о классе
+    classedit:
+        description: Редактирование параметров класса
