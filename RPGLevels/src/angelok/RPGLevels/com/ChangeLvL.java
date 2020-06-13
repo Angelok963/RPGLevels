@@ -4,9 +4,9 @@ package angelok.RPGLevels.com;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 
-public class ChangeLvL {
+public class ChangeLvL implements RPGLevelsAPI{
 
-	public static void lvlUp(Player p)  {
+	public static void lvlUp(Player p) {
 		RPGPlayer rpg = RPGLevels.rpg.get(p);
 
 		String clas = rpg.getPclass();

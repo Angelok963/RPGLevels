@@ -157,14 +157,7 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 		} 
 		for (String classname : list) {
 
-			rpgclass.put(classname,
-					new RPGClasses(DataManager.getClassDataString(classname, "info"),
-							DataManager.getClassDataString(classname, "item"),
-							DataManager.getClassDataDouble(classname, "defaultheal"),
-							DataManager.getClassDataDouble(classname, "changehealtolvl"),
-							DataManager.getClassDataDouble(classname, "defaultmana"),
-							DataManager.getClassDataDouble(classname, "changemanatolvl"),
-							DataManager.getClassDataDouble(classname, "manapersecond")));
+			DataManager.loadClassData(classname);
 
 		}
 
@@ -178,28 +171,11 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 		
 		
 		for(String classname : rpgclass.keySet()){
-			DataManager.setClassData(classname, "changehealtolvl", rpgclass.get(classname).getChangehealtolvl());
-			DataManager.setClassData(classname, "changemanatolvl", rpgclass.get(classname).getChangemanatolvl());
-			DataManager.setClassData(classname, "defaultheal", rpgclass.get(classname).getDefaultheal());
-			DataManager.setClassData(classname, "defaultmana", rpgclass.get(classname).getDefaultmana());
-			DataManager.setClassData(classname, "info", rpgclass.get(classname).getInfo());
-			DataManager.setClassData(classname, "item", rpgclass.get(classname).getItem());
-			DataManager.setClassData(classname, "manapersecond", rpgclass.get(classname).getManapersecond());
-			
+		DataManager.saveClassData(classname);
 		}
 		
 		for(Player p : Bukkit.getOnlinePlayers()){
-			String player = p.getName();
-			RPGPlayer rpg = RPGLevels.rpg.get(p);
-			
-			
-			DataManager.setPlayerData(player, "exp", rpg.getExp());
-			DataManager.setPlayerData(player, "heal", rpg.getHeal());
-			DataManager.setPlayerData(player, "lastheal", rpg.getLastheal());
-			DataManager.setPlayerData(player, "lvl", rpg.getLvl());
-			DataManager.setPlayerData(player, "mana", rpg.getMana());
-			DataManager.setPlayerData(player, "class", rpg.getPclass());
-			DataManager.setPlayerData(player, "skills", rpg.getSkills());
+			DataManager.savePlayerData(p);
 		}
 		
 		for (Player p : Bukkit.getOnlinePlayers()) {
@@ -211,7 +187,6 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 		try {
 			SQLConnection.c.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

@@ -97,6 +97,44 @@ public class CmdLevel implements CommandExecutor {
 			sender.sendMessage(msg);
 			return true;
 
+		case "sync":
+
+			if (!sender.hasPermission("rpglevels.cmd.sync")) {
+
+				sender.sendMessage(noperms);
+				return false;
+
+			}
+			sender.sendMessage("§c(§eRPGLevels§c) §cСинхронизируемся с хранилищем данных...");
+			for(String classname : RPGLevels.rpgclass.keySet())
+		    DataManager.loadClassData(classname);
+			
+			for(Player player : Bukkit.getOnlinePlayers())
+			    DataManager.loadPlayerData(player);	
+			sender.sendMessage("§c(§eRPGLevels§c) §cСинхронизация §cуспешно §7завершена!");
+			
+			
+		return true;
+		
+		case "save":
+
+			if (!sender.hasPermission("rpglevels.cmd.save")) {
+
+				sender.sendMessage(noperms);
+				return false;
+
+			}
+			sender.sendMessage("§c(§eRPGLevels§c) §cСохраняем данные в хранилище...");
+			for(String classname : RPGLevels.rpgclass.keySet())
+		    DataManager.saveClassData(classname);
+			
+			for(Player player : Bukkit.getOnlinePlayers())
+			    DataManager.savePlayerData(player);	
+			sender.sendMessage("§c(§eRPGLevels§c) §cСохранение §cуспешно §7завершено!");
+			
+			
+		return true;
+			
 		case "help":
 
 			if (!sender.hasPermission("rpglevels.cmd.help")) {
@@ -143,7 +181,13 @@ public class CmdLevel implements CommandExecutor {
 			
 			if (sender.hasPermission("rpglevels.cmd.reload"))
 				sender.sendMessage("§c> /level reload §7- перезагрузка конфига");
+			
+			if (sender.hasPermission("rpglevels.cmd.sync"))
+				sender.sendMessage("§c> /level sync §7- загрузить данные из хранилища в память сервера");
 
+			if (sender.hasPermission("rpglevels.cmd.save"))
+				sender.sendMessage("§c> /level save §7- выгрузить данные из памяти сервера в хранилище");
+			
 			sender.sendMessage("\n§7======================================");
 			return true;
 
