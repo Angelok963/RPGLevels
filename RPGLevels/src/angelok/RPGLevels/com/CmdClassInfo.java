@@ -39,26 +39,26 @@ public class CmdClassInfo implements CommandExecutor {
 
 		//Выводим инфо о классе если имеется
 		if(info.getInfo().isEmpty())
-		sender.sendMessage("§c> §7[info]Информация о классе: §c<Не задана>");
+		sender.sendMessage("§c> §8[info]§7Информация о классе: §c<Не задана>");
 		else{
-    	sender.sendMessage("§c> §7[info]Информация о классе:");
+    	sender.sendMessage("§c> §8[info]§7Информация о классе:");
     	String[] m = info.getInfo().split("\\\\");
     	for(int a = 0; a<m.length; a++)
     		if(!m[a].isEmpty())
     	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', m[a]));
 		}
 		
-		sender.sendMessage("§c> §7[item]Предмет в качестве иконки класса: §c" + info.getItem());
+		sender.sendMessage("§c> §8[item]§7Предмет в качестве иконки класса: §c" + info.getItem());
 		
-		sender.sendMessage("§c> §7[changehealtolvl]Количество добавляемого здоровья за повышение уровня: §c" + info.getChangehealtolvl());
+		sender.sendMessage("§c> §8[changehealtolvl]§7Количество добавляемого здоровья за повышение уровня: §c" + info.getChangehealtolvl());
 		
-		sender.sendMessage("§c> §7[changemanatolvl]Количество добавляемой маны за повышение уровня: §c" + info.getChangemanatolvl());
+		sender.sendMessage("§c> §8[changemanatolvl]§7Количество добавляемой маны за повышение уровня: §c" + info.getChangemanatolvl());
 		
-		sender.sendMessage("§c> §7[defaultmana]Лимит маны в классе по умолчанию: §c" + info.getDefaultmana());
+		sender.sendMessage("§c> §8[defaultmana]§7Лимит маны в классе по умолчанию: §c" + info.getDefaultmana());
 		
-		sender.sendMessage("§c> §7[defaultheal]Лимит здоровья в классе по умолчанию: §c" + info.getDefaultheal());
+		sender.sendMessage("§c> §8[defaultheal]§7Лимит здоровья в классе по умолчанию: §c" + info.getDefaultheal());
 
-		sender.sendMessage("§c> §7[manapersecond]Скорость регенерации маны в классе: §c" + info.getManapersecond() + "/сек.");
+		sender.sendMessage("§c> §8[manapersecond]§7Скорость регенерации маны в классе: §c" + info.getManapersecond() + "/сек.");
 		
 		sender.sendMessage("\n§7===========================================================");
 		return true;
