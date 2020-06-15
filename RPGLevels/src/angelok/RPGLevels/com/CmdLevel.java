@@ -408,6 +408,15 @@ public class CmdLevel implements CommandExecutor {
 			if (sender.hasPermission("rpglevels.cmd.save")) {
 				sender.sendMessage("§c> /level save §7- выгрузить данные из памяти сервера в хранилище");
 			}
+			if (sender.hasPermission("rpglevels.cmd.amanage.list")) {
+				sender.sendMessage("§c> /amanage list §7- получить список тегов предмета");
+			}
+			if (sender.hasPermission("rpglevels.cmd.amanage.set")) {
+				sender.sendMessage("§c> /amanage set <имя атрибута> <значение> §7- Установить тег предмету");
+			}
+			if (sender.hasPermission("rpglevels.cmd.amanage.remove")) {
+				sender.sendMessage("§c> /amanage remove <имя атрибута> §7- удалить тег с предмета");
+			}
 			sender.sendMessage("\n§7======================================");
 			return true;
 		}

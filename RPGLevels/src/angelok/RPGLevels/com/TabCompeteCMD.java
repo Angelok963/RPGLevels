@@ -15,7 +15,7 @@ public class TabCompeteCMD implements Listener {
 	public void expChange(TabCompleteEvent e) {
 		CommandSender sender = e.getSender();
 		String cmd = e.getBuffer();
-		if (cmd.equals("/level ")) {
+		if (cmd.equalsIgnoreCase("/level ")) {
 			List<String> list = new ArrayList<String>();
 			if (sender.hasPermission("rpglevels.cmd.reload")) {
 				list.add("reload");
@@ -37,15 +37,24 @@ public class TabCompeteCMD implements Listener {
 			}
 			e.setCompletions(list);
 		}
-		if ((cmd.equals("/level see ") && sender.hasPermission("rpglevels.cmd.see"))
-				|| (cmd.equals("/level set ") && sender.hasPermission("rpglevels.cmd.set"))) {
+		if ((cmd.equalsIgnoreCase("/level see ") && sender.hasPermission("rpglevels.cmd.see"))
+				|| (cmd.equalsIgnoreCase("/level set ") && sender.hasPermission("rpglevels.cmd.set"))) {
 			e.setCompletions(DataManager.getPlayers());
 		}
-		if ((cmd.equals("/classcreate ") && sender.hasPermission("rpglevels.cmd.classcreate"))
-				|| (cmd.equals("/classremove ") && sender.hasPermission("rpglevels.cmd.classremove"))
-				|| (cmd.equals("/classinfo ") && sender.hasPermission("rpglevels.cmd.classinfo"))
-				|| (cmd.equals("/classedit ") && sender.hasPermission("rpglevels.cmd.classedit"))) {
+		if ((cmd.equalsIgnoreCase("/classcreate ") && sender.hasPermission("rpglevels.cmd.classcreate"))
+				|| (cmd.equalsIgnoreCase("/classremove ") && sender.hasPermission("rpglevels.cmd.classremove"))
+				|| (cmd.equalsIgnoreCase("/classinfo ") && sender.hasPermission("rpglevels.cmd.classinfo"))
+				|| (cmd.equalsIgnoreCase("/classedit ") && sender.hasPermission("rpglevels.cmd.classedit"))) {
 			e.setCompletions(DataManager.getClasses());
 		}
+		ArrayList<String> l = new ArrayList<>();
+
+		l.add("list");
+		l.add("set");
+		l.add("remove");
+
+		if ((cmd.equalsIgnoreCase("/amanage ")
+				|| cmd.equalsIgnoreCase("/attributemanage ") && sender.hasPermission("rpglevels.cmd.attributemanage")))
+			e.setCompletions(l);
 	}
 }

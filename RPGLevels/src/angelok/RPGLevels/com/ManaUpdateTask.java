@@ -20,7 +20,7 @@ public class ManaUpdateTask extends BukkitRunnable {
 			}
 			double maxMana = Utilities.getPlayerMaxMana(p.getName());
 			double pmana = rpg.getMana();
-			double manaPerSecond = RPGLevels.rpgclass.get(clas).getManapersecond();
+			double manaPerSecond = Utilities.getManaPerSecond(p);
 			ManaUpdateEvent event = new ManaUpdateEvent(maxMana, pmana, manaPerSecond, p);
 			Bukkit.getServer().getPluginManager().callEvent(event);
 			if (!event.isCancelled()) {

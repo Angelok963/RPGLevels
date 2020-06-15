@@ -130,6 +130,7 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 		getCommand("classremove").setExecutor(new CmdClassRemove(this));
 		getCommand("classinfo").setExecutor(new CmdClassInfo(this));
 		getCommand("classedit").setExecutor(new CmdClassEdit(this));
+		getCommand("attributemanage").setExecutor(new CmdAttributeManage(this));
 
 
 		// Если конфиг не существует достаём его из jar и сохраняем

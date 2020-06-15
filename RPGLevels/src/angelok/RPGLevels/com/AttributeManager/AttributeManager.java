@@ -11,8 +11,11 @@ public class AttributeManager {
 		if (item != null) {
 			net.minecraft.server.v1_12_R1.ItemStack baseItem = CraftItemStack.asNMSCopy(item);
 			NBTTagCompound itemTags = baseItem.hasTag() ? baseItem.getTag() : new NBTTagCompound();
-			NBTTagCompound CustomTags = new NBTTagCompound();
+			NBTTagCompound CustomTags = itemTags.getCompound("CustomTags");
+			
+			if(Value != null)
 			CustomTags.setString(AttributeName, Value);
+			else CustomTags.remove(AttributeName);
 			itemTags.set("CustomTags", CustomTags);
 			baseItem.setTag(itemTags);
 			return CraftItemStack.asBukkitCopy(baseItem);
@@ -99,7 +102,7 @@ public class AttributeManager {
 		if (item != null) {
 			net.minecraft.server.v1_12_R1.ItemStack baseItem = CraftItemStack.asNMSCopy(item);
 			NBTTagCompound itemTags = baseItem.hasTag() ? baseItem.getTag() : new NBTTagCompound();
-			NBTTagCompound CustomTags = new NBTTagCompound();
+			NBTTagCompound CustomTags = itemTags.getCompound("CustomTags");
 			CustomTags.setInt(AttributeName, Value);
 			itemTags.set("CustomTags", CustomTags);
 			baseItem.setTag(itemTags);
@@ -112,7 +115,7 @@ public class AttributeManager {
 		if (item != null) {
 			net.minecraft.server.v1_12_R1.ItemStack baseItem = CraftItemStack.asNMSCopy(item);
 			NBTTagCompound itemTags = baseItem.hasTag() ? baseItem.getTag() : new NBTTagCompound();
-			NBTTagCompound CustomTags = new NBTTagCompound();
+			NBTTagCompound CustomTags = itemTags.getCompound("CustomTags");
 			CustomTags.setDouble(AttributeName, Value);
 			itemTags.set("CustomTags", CustomTags);
 			baseItem.setTag(itemTags);

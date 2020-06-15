@@ -5,13 +5,21 @@ author: [Angelok]
 commands:
     level:
         description: Управление плагином RPGLevels
+        aliases: [lvl]
     class:
         description: Выбор класса
     classcreate:
         description: Создание нового класса
+        aliases: [ccreate]
     classremove:
         description: Удаление класса
+        aliases: [cremove]
     classinfo:
         description: Получить информацию о классе
+        aliases: [cinfo]
     classedit:
         description: Редактирование параметров класса
+        aliases: [cedit]
+    attributemanage:
+        description: Управление атрибутами предметов
+        aliases: [amanage]

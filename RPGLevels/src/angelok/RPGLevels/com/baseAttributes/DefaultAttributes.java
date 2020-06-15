@@ -27,4 +27,13 @@ public class DefaultAttributes {
 		}
 		return boost;
 	}
+	public static double getManaRegenBoost(Player player) {
+		double boost = 0.0;
+		for (ItemStack i : getSlots(player)) {
+			if (AttributeManager.hasAttribute(i, "ManaRegenBoost")) {
+				boost = boost + AttributeManager.getAttributeValueDouble(i, "ManaRegenBoost");
+			}
+		}
+		return boost;
+	}
 }

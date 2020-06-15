@@ -1,7 +1,9 @@
 package angelok.RPGLevels.com;
 
-import angelok.RPGLevels.com.baseAttributes.DefaultAttributes;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+
+import angelok.RPGLevels.com.baseAttributes.DefaultAttributes;
 
 public class Utilities
 {
@@ -27,4 +29,10 @@ public class Utilities
         }
         return max;
     }
+    
+    
+    public static double getManaPerSecond(Player player) {
+    	double s = RPGLevels.rpgclass.get(RPGLevels.rpg.get(player).getPclass()).getManapersecond();
+		return s + s / 100.0 * DefaultAttributes.getManaRegenBoost(player);
+	}
 }
