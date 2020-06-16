@@ -10,7 +10,7 @@ public class RPGPlayer {
 	private double heal;
 	private double lastheal;
 	
-	protected RPGPlayer(int lvl, double mana, int exp, int skills, String pclass, double heal, double lastheal){
+	public RPGPlayer(int lvl, double mana, int exp, int skills, String pclass, double heal, double lastheal){
 		this.exp = exp;
 		this.heal = heal;
 		this.lastheal = lastheal;
@@ -20,49 +20,49 @@ public class RPGPlayer {
 		this.skills = skills;
 	}
 	
-	protected double getHeal() {
+	public double getHeal() {
 		return heal;
 	}
-	protected void setHeal(double heal) {
+	public void setHeal(double heal) {
 		this.heal = heal;
 	}
-	protected int getLvl() {
+	public int getLvl() {
 		return lvl;
 	}
-	protected void setLvl(int lvl) {
+	public void setLvl(int lvl) {
 		this.lvl = lvl;
 	}
-	protected int getExp() {
+	public int getExp() {
 		return exp;
 	}
-	protected void setExp(int exp) {
+	public void setExp(int exp) {
 		this.exp = exp;
 	}
-	protected double getMana() {
+	public double getMana() {
 		return mana;
 	}
-	protected void setMana(double mana) {
+	public void setMana(double mana) {
 		this.mana = mana;
 	}
-	protected int getSkills() {
+	public int getSkills() {
 		return skills;
 	}
-	protected void setSkills(int skills) {
+	public void setSkills(int skills) {
 		this.skills = skills;
 	}
-	protected double getLastheal() {
+	public double getLastheal() {
 		return lastheal;
 	}
-	protected void setLastheal(double lastheal) {
+	public void setLastheal(double lastheal) {
 		this.lastheal = lastheal;
 	}
-	protected String getPclass() {
+	public String getPclass() {
 		
-		if(DataManager.getClasses().contains(pclass))
+		if(RPGLevels.rpgclass.keySet().contains(pclass))
 		return pclass;
 		else return "";
 	}
-	protected void setPclass(String pclass) {
+	public void setPclass(String pclass) {
 		this.pclass = pclass;
 	}
 	

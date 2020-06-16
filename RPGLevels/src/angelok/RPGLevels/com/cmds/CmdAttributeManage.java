@@ -1,4 +1,4 @@
-package angelok.RPGLevels.com;
+package angelok.RPGLevels.com.cmds;
 
 import java.util.ArrayList;
 
@@ -9,11 +9,12 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import angelok.RPGLevels.com.Lang;
 import angelok.RPGLevels.com.AttributeManager.AttributeManager;
 
 public class CmdAttributeManage implements CommandExecutor {
 
-	public CmdAttributeManage(RPGLevels plugin) {
+	public CmdAttributeManage() {
 	}
 
 	@Override

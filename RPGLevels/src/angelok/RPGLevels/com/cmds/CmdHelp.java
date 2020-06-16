@@ -1,4 +1,4 @@
-package angelok.RPGLevels.com;
+package angelok.RPGLevels.com.cmds;
 
 import org.bukkit.command.CommandSender;
 

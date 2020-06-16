@@ -3,14 +3,16 @@ package angelok.RPGLevels.com;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 
 public class DataManager {
 
 	private static String type = RPGLevels.plugin.getConfig().getString("StorageType");
 
-	protected static void setPlayerData(String player, String DataName, String value) {
+	public static void setPlayerData(String player, String DataName, String value) {
 
 		switch (type) {
 		case "file":
@@ -39,7 +41,7 @@ public class DataManager {
 
 	}
 
-	protected static void setPlayerData(String player, String DataName, int value) {
+	public static void setPlayerData(String player, String DataName, int value) {
 
 		switch (type) {
 		case "file":
@@ -67,7 +69,7 @@ public class DataManager {
 
 	}
 
-	protected static void setPlayerData(String player, String DataName, double value) {
+	public static void setPlayerData(String player, String DataName, double value) {
 
 		switch (type) {
 		case "file":
@@ -95,7 +97,7 @@ public class DataManager {
 
 	}
 
-	protected static int getPlayerDataInt(String player, String DataName) {
+	public static int getPlayerDataInt(String player, String DataName) {
 
 		switch (type) {
 		case "file":
@@ -116,7 +118,7 @@ public class DataManager {
 		}
 	}
 
-	protected static double getPlayerDataDouble(String player, String DataName) {
+	public static double getPlayerDataDouble(String player, String DataName) {
 
 		switch (type) {
 		case "file":
@@ -137,7 +139,7 @@ public class DataManager {
 		}
 	}
 
-	protected static String getPlayerDataString(String player, String DataName) {
+	public static String getPlayerDataString(String player, String DataName) {
 
 		switch (type) {
 		case "file":
@@ -158,7 +160,7 @@ public class DataManager {
 		}
 	}
 
-	protected static ArrayList<String> getPlayers() {
+	public static ArrayList<String> getPlayers() {
 
 		switch (type) {
 		case "file":
@@ -185,7 +187,7 @@ public class DataManager {
 
 	}
 
-	protected static void setClassData(String classname, String DataName, String value) {
+	public static void setClassData(String classname, String DataName, String value) {
 
 		switch (type) {
 		case "file":
@@ -216,7 +218,7 @@ public class DataManager {
 
 	}
 
-	protected static void setClassData(String classname, String DataName, int value) {
+	public static void setClassData(String classname, String DataName, int value) {
 
 		switch (type) {
 		case "file":
@@ -247,7 +249,7 @@ public class DataManager {
 
 	}
 
-	protected static void setClassData(String classname, String DataName, double value) {
+	public static void setClassData(String classname, String DataName, double value) {
 
 		switch (type) {
 		case "file":
@@ -278,7 +280,7 @@ public class DataManager {
 
 	}
 
-	protected static String getClassDataString(String classname, String DataName) {
+	public static String getClassDataString(String classname, String DataName) {
 
 		switch (type) {
 		case "file":
@@ -299,7 +301,7 @@ public class DataManager {
 		}
 	}
 
-	protected static int getClassDataInt(String classname, String DataName) {
+	public static int getClassDataInt(String classname, String DataName) {
 
 		switch (type) {
 		case "file":
@@ -320,7 +322,7 @@ public class DataManager {
 		}
 	}
 
-	protected static double getClassDataDouble(String classname, String DataName) {
+	public static double getClassDataDouble(String classname, String DataName) {
 
 		switch (type) {
 		case "file":
@@ -341,7 +343,7 @@ public class DataManager {
 		}
 	}
 
-	protected static ArrayList<String> getClasses() {
+	public static ArrayList<String> getClasses() {
 
 		switch (type) {
 		case "file":
@@ -368,7 +370,7 @@ public class DataManager {
 
 	}
 
-	protected static void RemoveClass(String classname) {
+	public static void RemoveClass(String classname) {
 
 		switch (type) {
 		case "file":
@@ -394,12 +396,19 @@ public class DataManager {
 
 	}
 
-	protected static void savePlayerData(Player p) {
-		RPGPlayer rpg = RPGLevels.rpg.get(p);
+	public static void savePlayerData(Player p, HashMap<Player, RPGPlayer> rpgp) {
+		RPGPlayer rpg = rpgp.get(p);
 		String player = p.getName();
+		
+		double maxheal = rpg.getHeal();
+		
+		double lastheal = rpg.getLastheal();
+		if(lastheal > maxheal)
+		lastheal = maxheal;
+		
 		setPlayerData(player, "exp", rpg.getExp());
-		setPlayerData(player, "heal", rpg.getHeal());
-		setPlayerData(player, "lastheal", rpg.getLastheal());
+		setPlayerData(player, "heal", maxheal);
+		setPlayerData(player, "lastheal", lastheal);
 		setPlayerData(player, "lvl", rpg.getLvl());
 		setPlayerData(player, "mana", rpg.getMana());
 		setPlayerData(player, "class", rpg.getPclass());
@@ -407,20 +416,31 @@ public class DataManager {
 
 	}
 
-	protected static void loadPlayerData(Player p) {
+	public static HashMap<Player, RPGPlayer> loadPlayerData(Player p, HashMap<Player, RPGPlayer> rpg) {
 
 		String player = p.getName();
 
-		RPGLevels.rpg.put(p, new RPGPlayer(DataManager.getPlayerDataInt(player, "lvl"),
+		double maxheal = DataManager.getPlayerDataDouble(player, "heal");
+		double lastheal = DataManager.getPlayerDataDouble(player, "lastheal");
+		if(lastheal > maxheal)
+			lastheal = maxheal;
+		
+		p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxheal);
+
+		p.setHealth(lastheal);
+		p.setLevel(DataManager.getPlayerDataInt(player, "lvl"));
+
+
+		rpg.put(p, new RPGPlayer(DataManager.getPlayerDataInt(player, "lvl"),
 				DataManager.getPlayerDataDouble(player, "mana"), DataManager.getPlayerDataInt(player, "exp"),
 				DataManager.getPlayerDataInt(player, "skills"), DataManager.getPlayerDataString(player, "class"),
 				DataManager.getPlayerDataDouble(player, "heal"), DataManager.getPlayerDataDouble(player, "lastheal")));
-
+return rpg;
 	}
 
-	protected static void saveClassData(String classname) {
+	public static void saveClassData(String classname, HashMap<String, RPGClasses> rpgclass) {
 
-		RPGClasses rpg = RPGLevels.rpgclass.get(classname);
+		RPGClasses rpg = rpgclass.get(classname);
 
 		DataManager.setClassData(classname, "changehealtolvl", rpg.getChangehealtolvl());
 		DataManager.setClassData(classname, "changemanatolvl", rpg.getChangemanatolvl());
@@ -432,9 +452,9 @@ public class DataManager {
 
 	}
 
-	protected static void loadClassData(String classname) {
+	public static HashMap<String, RPGClasses> loadClassData(String classname, HashMap<String, RPGClasses> rpgclass) {
 
-		RPGLevels.rpgclass.put(classname,
+		rpgclass.put(classname,
 				new RPGClasses(DataManager.getClassDataString(classname, "info"),
 						DataManager.getClassDataString(classname, "item"),
 						DataManager.getClassDataDouble(classname, "defaultheal"),
@@ -442,6 +462,8 @@ public class DataManager {
 						DataManager.getClassDataDouble(classname, "defaultmana"),
 						DataManager.getClassDataDouble(classname, "changemanatolvl"),
 						DataManager.getClassDataDouble(classname, "manapersecond")));
+
+		return rpgclass;
 	}
 
 }

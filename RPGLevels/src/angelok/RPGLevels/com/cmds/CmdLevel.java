@@ -1,21 +1,49 @@
-package angelok.RPGLevels.com;
+package angelok.RPGLevels.com.cmds;
 
 import org.bukkit.Location;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
+import java.util.HashMap;
+
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
+
+import angelok.RPGLevels.com.AutoSaveData;
+import angelok.RPGLevels.com.DataManager;
+import angelok.RPGLevels.com.Lang;
+import angelok.RPGLevels.com.LevelUp;
+import angelok.RPGLevels.com.RPGClasses;
+import angelok.RPGLevels.com.RPGLevels;
+import angelok.RPGLevels.com.RPGPlayer;
+import angelok.RPGLevels.com.Utilities;
+
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.CommandExecutor;
 
 public class CmdLevel implements CommandExecutor {
 	private RPGLevels plugin;
+	private HashMap<Player, RPGPlayer> rpgp;
+	private HashMap<String, RPGClasses> clas;
+	@SuppressWarnings("unused")
+	private YamlConfiguration lang;
+	private YamlConfiguration classes;
+	@SuppressWarnings("unused")
+	private YamlConfiguration datap;
+	private BukkitTask saveTask;
 	private BukkitTask f;
 
-	public CmdLevel(RPGLevels plugin) {
+	public CmdLevel(RPGLevels plugin, HashMap<Player, RPGPlayer> rpgp, HashMap<String, RPGClasses> clas,
+			YamlConfiguration lang, YamlConfiguration classes, YamlConfiguration dataplayer, BukkitTask saveTask) {
 		this.plugin = plugin;
+		this.rpgp = rpgp;
+		this.clas = clas;
+		this.lang = lang;
+		this.classes = classes;
+		this.datap = dataplayer;
+		this.saveTask = saveTask;
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String str, String[] args) {
@@ -74,7 +102,7 @@ public class CmdLevel implements CommandExecutor {
 			String old_data = plugin.getConfig().getString("StorageType");
 			plugin.reloadConfig();
 
-			RPGLevels.lang = YamlConfiguration
+			this.lang = YamlConfiguration
 					.loadConfiguration(new File(plugin.getDataFolder() + File.separator + "lang.yml"));
 
 			String new_data = plugin.getConfig().getString("StorageType");
@@ -85,20 +113,22 @@ public class CmdLevel implements CommandExecutor {
 						plugin.getDataFolder() + File.separator + "Data" + File.separator + "classes.yml");
 				if (!classdata.exists()) {
 					RPGLevels.saveClassData();
-					RPGLevels.classes.set("Лучник.info", "Класс по умолчанию\\nможно менять");
-					RPGLevels.classes.set("Лучник.item", "BOW");
-					RPGLevels.classes.set("Лучник.defaultheal", 20.5);
-					RPGLevels.classes.set("Лучник.changehealtolvl", 5.5);
-					RPGLevels.classes.set("Лучник.defaultmana", 10.5);
-					RPGLevels.classes.set("Лучник.changemanatolvl", 10.5);
-					RPGLevels.classes.set("Лучник.manapersecond", 2.5);
+					this.classes.set("Лучник.info", "Класс по умолчанию\\nможно менять");
+					this.classes.set("Лучник.item", "BOW");
+					this.classes.set("Лучник.defaultheal", 20.5);
+					this.classes.set("Лучник.changehealtolvl", 5.5);
+					this.classes.set("Лучник.defaultmana", 10.5);
+					this.classes.set("Лучник.changemanatolvl", 10.5);
+					this.classes.set("Лучник.manapersecond", 2.5);
 					RPGLevels.saveClassData();
 				}
 				if (!playerdata.exists()) {
 					RPGLevels.savePlayerData();
 				}
-				RPGLevels.datap = YamlConfiguration.loadConfiguration(playerdata);
-				RPGLevels.classes = YamlConfiguration.loadConfiguration(classdata);
+				Utilities.loadDataPlayerYML(YamlConfiguration.loadConfiguration(
+						new File(plugin.getDataFolder() + File.separator + "Data" + File.separator + "players.yml")));
+				Utilities.loadDataClassesYML(YamlConfiguration.loadConfiguration(
+						new File(plugin.getDataFolder() + File.separator + "Data" + File.separator + "classes.yml")));
 			}
 			String msg = "";
 			if (old_data.equals(new_data)) {
@@ -109,26 +139,28 @@ public class CmdLevel implements CommandExecutor {
 				msg = Lang.cfgreload_warn();
 			}
 			if (plugin.getConfig().getBoolean("AutoSaveDataModule.enabled")) {
-				if (!RPGLevels.saveTask.isCancelled()) {
-					RPGLevels.saveTask.cancel();
+				if(this.saveTask != null)
+				if (!this.saveTask.isCancelled()) {
+					this.saveTask.cancel();
 				}
 
-				if(f != null)
-				if(!f.isCancelled()) f.cancel();
-				
-				 f = Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
+				if (f != null)
+					if (!f.isCancelled())
+						f.cancel();
+
+				f = Bukkit.getScheduler().runTaskLater(plugin, new Runnable() {
 
 					@Override
 					public void run() {
 
-					RPGLevels.saveTask = new AutoSaveData(plugin).runTaskTimerAsynchronously(plugin, 0L,
+						saveTask = new AutoSaveData(plugin, clas, rpgp).runTaskTimerAsynchronously(plugin, 0L,
 								(plugin.getConfig().getInt("AutoSaveDataModule.period") * 1200));
 
 					}
 				}, (plugin.getConfig().getInt("AutoSaveDataModule.period") * 1200));
 
-			} else if (!RPGLevels.saveTask.isCancelled()) {
-				RPGLevels.saveTask.cancel();
+			} else if (!this.saveTask.isCancelled()) {
+				this.saveTask.cancel();
 			}
 			sender.sendMessage(msg);
 			return true;
@@ -152,7 +184,7 @@ public class CmdLevel implements CommandExecutor {
 			if (Bukkit.getPlayer(args[1]) != null) {
 				isOnline = true;
 				p = Bukkit.getPlayer(args[1]);
-				rpg = RPGLevels.rpg.get(p);
+				rpg = rpgp.get(p);
 			}
 			int lvl = 0;
 			lvl = (isOnline ? rpg.getLvl() : DataManager.getPlayerDataInt(args[1], "lvl"));
@@ -224,14 +256,14 @@ public class CmdLevel implements CommandExecutor {
 				v = Double.valueOf(args[3]);
 				value = (int) v;
 			}
-			int max = plugin.getConfig().getConfigurationSection("").getKeys(false).size();
+			int max = plugin.getConfig().getConfigurationSection("Levels").getKeys(false).size();
 			boolean isOnline = false;
 			Player p = null;
 			RPGPlayer rpg = null;
 			if (Bukkit.getPlayer(args[1]) != null) {
 				isOnline = true;
 				p = Bukkit.getPlayer(args[1]);
-				rpg = RPGLevels.rpg.get(p);
+				rpg = rpgp.get(p);
 			}
 			switch (args[2]) {
 			case "skills": {
@@ -245,7 +277,7 @@ public class CmdLevel implements CommandExecutor {
 				}
 				if (isOnline) {
 					rpg.setSkills(value);
-					RPGLevels.rpg.put(p, rpg);
+					rpgp.put(p, rpg);
 
 					p.sendMessage(Lang.stateupdate_skills().replace("{amount}", String.valueOf(value)));
 				} else {
@@ -274,8 +306,8 @@ public class CmdLevel implements CommandExecutor {
 				}
 				if (isOnline) {
 					rpg.setExp(value);
-					RPGLevels.rpg.put(p, rpg);
-					LevelUp.VisualLVL(p);
+					rpgp.put(p, rpg);
+					new LevelUp(plugin, clas, rpgp).VisualLVL(p);
 					Bukkit.getPlayer(args[1])
 							.sendMessage(Lang.stateupdate_exp().replace("{amount}", String.valueOf(value)));
 
@@ -291,23 +323,46 @@ public class CmdLevel implements CommandExecutor {
 					sender.sendMessage(Lang.nopermission());
 					return false;
 				}
-				if (value < 0 || value > max) {
+				if (value <= 0 || value > max) {
 					sender.sendMessage(Lang.lvlnotexist().replace("{lvl}", String.valueOf(value)).replace("{maxlvl}",
 							String.valueOf(max)));
 					return false;
 				}
+				int lastlvl = 0;
+
 				if (isOnline) {
+					lastlvl = rpg.getLvl();
 					p.setLevel(value);
 					rpg.setLvl(value);
 					rpg.setExp(0);
-					RPGLevels.rpg.put(p, rpg);
-					LevelUp.VisualLVL(p);
+					rpgp.put(p, rpg);
+
+					new LevelUp(plugin, clas, rpgp).VisualLVL(p);
 					Bukkit.getPlayer(args[1])
 							.sendMessage(Lang.stateupdate_lvl().replace("{amount}", String.valueOf(value)));
 				} else {
+					lastlvl = DataManager.getPlayerDataInt(args[1], "lvl");
 					DataManager.setPlayerData(args[1], "lvl", value);
 					DataManager.setPlayerData(args[1], "exp", 0);
 				}
+
+				int postlvl = Integer.valueOf(value);
+
+				double editheal = postlvl - lastlvl;
+
+				double f = 0;
+
+				if (isOnline) {
+					f = rpg.getHeal() + (editheal * clas.get(rpg.getPclass()).getChangehealtolvl());
+						rpg.setHeal(f);
+					p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(f);
+				} else {
+					f = DataManager.getPlayerDataDouble(args[1], "heal") + (editheal
+							* clas.get(DataManager.getPlayerDataString(args[1], "class")).getChangehealtolvl());
+					DataManager.setPlayerData(args[1], "heal", value);
+					DataManager.setPlayerData(args[1], "heal", f);
+				}
+
 				sender.sendMessage(
 						Lang.infoupdate_lvl().replace("{Player}", args[1]).replace("{amount}", String.valueOf(value)));
 				return true;
@@ -325,7 +380,7 @@ public class CmdLevel implements CommandExecutor {
 				}
 				if (isOnline) {
 					rpg.setMana(v);
-					RPGLevels.rpg.put(p, rpg);
+					rpgp.put(p, rpg);
 
 					p.sendMessage(Lang.stateupdate_mana().replace("{amount}", String.valueOf(v)));
 				} else {
@@ -343,7 +398,7 @@ public class CmdLevel implements CommandExecutor {
 				if (args[3].equals("\"\"")) {
 					if (isOnline) {
 						rpg.setPclass("");
-						RPGLevels.rpg.put(p, rpg);
+						rpgp.put(p, rpg);
 						p.sendMessage(Lang.stateupdate_class_reset());
 					} else {
 						DataManager.setPlayerData(args[1], "class", "");
@@ -351,13 +406,13 @@ public class CmdLevel implements CommandExecutor {
 					sender.sendMessage(Lang.infoupdate_class_reset().replace("{Player}", args[1]));
 					return true;
 				}
-				if (!DataManager.getClasses().contains(args[3])) {
+				if (!this.clas.keySet().contains(args[3])) {
 					sender.sendMessage(Lang.classnotfound().replace("{Class}", args[3]));
 					return false;
 				}
 				if (isOnline) {
 					rpg.setPclass(args[3]);
-					RPGLevels.rpg.put(p, rpg);
+					rpgp.put(p, rpg);
 					p.sendMessage(Lang.stateupdate_class().replace("{Class}", args[3]));
 				} else {
 					DataManager.setPlayerData(args[1], "class", args[3]);
@@ -376,9 +431,9 @@ public class CmdLevel implements CommandExecutor {
 				sender.sendMessage(Lang.nopermission());
 				return false;
 			}
-			
+
 			return CmdHelp.sendHelpMsg(args, sender);
-			
+
 		}
 		case "save": {
 			if (!sender.hasPermission("rpglevels.cmd.save")) {
@@ -386,11 +441,11 @@ public class CmdLevel implements CommandExecutor {
 				return false;
 			}
 			sender.sendMessage(Lang.cmd_save_start());
-			for (String classname : RPGLevels.rpgclass.keySet()) {
-				DataManager.saveClassData(classname);
+			for (String classname : clas.keySet()) {
+				DataManager.saveClassData(classname, clas);
 			}
 			for (Player player : Bukkit.getOnlinePlayers()) {
-				DataManager.savePlayerData(player);
+				DataManager.savePlayerData(player, rpgp);
 			}
 			sender.sendMessage(Lang.cmd_save_end());
 			return true;
@@ -401,12 +456,23 @@ public class CmdLevel implements CommandExecutor {
 				return false;
 			}
 			sender.sendMessage(Lang.cmd_sync_start());
-			for (String classname : RPGLevels.rpgclass.keySet()) {
-				DataManager.loadClassData(classname);
+
+			if (plugin.getConfig().getString("StorageType").equals("file")) {
+				Utilities.loadDataPlayerYML(YamlConfiguration.loadConfiguration(
+						new File(plugin.getDataFolder() + File.separator + "Data" + File.separator + "players.yml")));
+				Utilities.loadDataClassesYML(YamlConfiguration.loadConfiguration(
+						new File(plugin.getDataFolder() + File.separator + "Data" + File.separator + "classes.yml")));
+			}
+
+			for (String classname : clas.keySet()) {
+				clas = DataManager.loadClassData(classname, clas);
 			}
 			for (Player player : Bukkit.getOnlinePlayers()) {
-				DataManager.loadPlayerData(player);
+				rpgp = DataManager.loadPlayerData(player, rpgp);
+
 			}
+			for (Player p : Bukkit.getOnlinePlayers())
+				new LevelUp(plugin, clas, rpgp).VisualLVL(p);
 			sender.sendMessage(Lang.cmd_sync_end());
 			return true;
 		}

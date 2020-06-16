@@ -15,6 +15,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import angelok.RPGLevels.com.AttributeManager.AttributsManager;
+import angelok.RPGLevels.com.cmds.CmdAttributeManage;
+import angelok.RPGLevels.com.cmds.CmdClass;
+import angelok.RPGLevels.com.cmds.CmdClassCreate;
+import angelok.RPGLevels.com.cmds.CmdClassEdit;
+import angelok.RPGLevels.com.cmds.CmdClassInfo;
+import angelok.RPGLevels.com.cmds.CmdClassRemove;
+import angelok.RPGLevels.com.cmds.CmdLevel;
 
 public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsManager {
 
@@ -37,7 +44,7 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 	protected static YamlConfiguration classes;
 	private static File cdata;
 
-	protected static BukkitTask saveTask;
+	private static BukkitTask saveTask;
 
 	@Override
 	public void onEnable() {
@@ -56,9 +63,9 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 
 		// загрузка языкового файла
 
-		if(!langfile.exists())
+		if (!langfile.exists())
 			Lang.loadDefautlLang();
-		
+
 		// Если конфиг не существует достаём его из jar и сохраняем
 		File config = new File(getDataFolder() + File.separator + "config.yml");
 		if (!config.exists()) {
@@ -144,23 +151,23 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 		}
 
 		Bukkit.getPluginManager().registerEvents(new TabCompeteCMD(this), this);
-		Bukkit.getPluginManager().registerEvents(new PlayerLeave(this), this);
-		Bukkit.getPluginManager().registerEvents(new LevelUp(this), this);
-		Bukkit.getPluginManager().registerEvents(new PlayerJoin(this), this);
+		Bukkit.getPluginManager().registerEvents(new PlayerLeave(rpg), this);
+		Bukkit.getPluginManager().registerEvents(new LevelUp(this, rpgclass, rpg), this);
+		Bukkit.getPluginManager().registerEvents(new PlayerJoin(this, rpg, rpgclass), this);
 		Bukkit.getPluginManager().registerEvents(new DeathExpSave(this), this);
-		Bukkit.getPluginManager().registerEvents(new CmdClass(this), this);
-		getCommand("level").setExecutor(new CmdLevel(this));
-		getCommand("class").setExecutor(new CmdClass(this));
-		getCommand("classcreate").setExecutor(new CmdClassCreate(this));
-		getCommand("classremove").setExecutor(new CmdClassRemove(this));
-		getCommand("classinfo").setExecutor(new CmdClassInfo(this));
-		getCommand("classedit").setExecutor(new CmdClassEdit(this));
-		getCommand("attributemanage").setExecutor(new CmdAttributeManage(this));
+		Bukkit.getPluginManager().registerEvents(new CmdClass(this, rpg, rpgclass), this);
+		getCommand("level").setExecutor(new CmdLevel(this, rpg, rpgclass, lang, classes, datap, saveTask));
+		getCommand("class").setExecutor(new CmdClass(this, rpg, rpgclass));
+		getCommand("classcreate").setExecutor(new CmdClassCreate(rpgclass));
+		getCommand("classremove").setExecutor(new CmdClassRemove(rpgclass));
+		getCommand("classinfo").setExecutor(new CmdClassInfo(rpgclass));
+		getCommand("classedit").setExecutor(new CmdClassEdit(rpgclass));
+		getCommand("attributemanage").setExecutor(new CmdAttributeManage());
 
-		new ManaUpdateTask(this).runTaskTimerAsynchronously(this, 0, 20);
+		new ManaUpdateTask(this, rpg, rpgclass).runTaskTimerAsynchronously(this, 0, 20);
 
 		if (getConfig().getBoolean("AutoSaveDataModule.enabled"))
-			saveTask = new AutoSaveData(this).runTaskTimerAsynchronously(this, 0,
+			saveTask = new AutoSaveData(this, rpgclass, rpg).runTaskTimerAsynchronously(this, 0,
 					getConfig().getInt("AutoSaveDataModule.period") * 1200);
 		else
 			saveTask = null;
@@ -175,7 +182,7 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 		}
 		for (String classname : list) {
 
-			DataManager.loadClassData(classname);
+		rpgclass = DataManager.loadClassData(classname, rpgclass);
 
 		}
 
@@ -189,11 +196,11 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 	public void onDisable() {
 
 		for (String classname : rpgclass.keySet()) {
-			DataManager.saveClassData(classname);
+			DataManager.saveClassData(classname, rpgclass);
 		}
 
 		for (Player p : Bukkit.getOnlinePlayers()) {
-			DataManager.savePlayerData(p);
+			DataManager.savePlayerData(p, rpg);
 		}
 
 		for (Player p : Bukkit.getOnlinePlayers()) {
@@ -212,7 +219,7 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 	}
 
 	// Метод сохранения данных игроков (файл datap.yml)
-	protected static void savePlayerData() {
+	public static void savePlayerData() {
 
 		try {
 			datap.save(pdata);
@@ -222,7 +229,7 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 
 	}
 
-	protected static void saveClassData() {
+	public static void saveClassData() {
 
 		try {
 			classes.save(cdata);
@@ -232,6 +239,6 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 		}
 
 	}
-
 	
+
 }

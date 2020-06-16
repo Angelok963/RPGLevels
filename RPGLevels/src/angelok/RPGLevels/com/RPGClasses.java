@@ -11,7 +11,7 @@ public class RPGClasses {
 	private double changemanatolvl;
 	private double manapersecond;
 	
-	protected RPGClasses(String info, String item, double defaultheal, double changehealtolvl, double defaultmana,
+	public RPGClasses(String info, String item, double defaultheal, double changehealtolvl, double defaultmana,
 			double changemanatolvl, double manapersecond){
 		
 		this.changehealtolvl = changehealtolvl;
@@ -24,46 +24,46 @@ public class RPGClasses {
 		
 	}
 	
-	protected String getInfo() {
+	public String getInfo() {
 		return info;
 	}
-	protected void setInfo(String info) {
+	public void setInfo(String info) {
 		this.info = info;
 	}
-	protected String getItem() {
+	public String getItem() {
 		return item;
 	}
-	protected void setItem(String item) {
+	public void setItem(String item) {
 		this.item = item;
 	}
-	protected double getDefaultheal() {
+	public double getDefaultheal() {
 		return defaultheal;
 	}
-	protected void setDefaultheal(double defaultheal) {
+	public void setDefaultheal(double defaultheal) {
 		this.defaultheal = defaultheal;
 	}
-	protected double getChangehealtolvl() {
+	public double getChangehealtolvl() {
 		return changehealtolvl;
 	}
-	protected void setChangehealtolvl(double changehealtolvl) {
+	public void setChangehealtolvl(double changehealtolvl) {
 		this.changehealtolvl = changehealtolvl;
 	}
-	protected double getDefaultmana() {
+	public double getDefaultmana() {
 		return defaultmana;
 	}
-	protected void setDefaultmana(double defaultmana) {
+	public void setDefaultmana(double defaultmana) {
 		this.defaultmana = defaultmana;
 	}
-	protected double getChangemanatolvl() {
+	public double getChangemanatolvl() {
 		return changemanatolvl;
 	}
-	protected void setChangemanatolvl(double changemanatolvl) {
+	public void setChangemanatolvl(double changemanatolvl) {
 		this.changemanatolvl = changemanatolvl;
 	}
-	protected double getManapersecond() {
+	public double getManapersecond() {
 		return manapersecond;
 	}
-	protected void setManapersecond(double manapersecond) {
+	public void setManapersecond(double manapersecond) {
 		this.manapersecond = manapersecond;
 	}
 

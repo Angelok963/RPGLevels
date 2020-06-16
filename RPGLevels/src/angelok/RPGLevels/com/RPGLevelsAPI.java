@@ -1,10 +1,12 @@
 package angelok.RPGLevels.com;
 
-import org.bukkit.attribute.Attribute;
-import org.bukkit.Material;
-import org.bukkit.Location;
+import java.util.ArrayList;
 import java.util.List;
+
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 
 public interface RPGLevelsAPI {
 	default int getLvl(String nickname) {
@@ -75,7 +77,7 @@ public interface RPGLevelsAPI {
 			RPGPlayer rpg = RPGLevels.rpg.get(Bukkit.getPlayer(nickname));
 			rpg.setExp(exp);
 			RPGLevels.rpg.put(Bukkit.getPlayer(nickname), rpg);
-			LevelUp.VisualLVL(Bukkit.getPlayer(nickname));
+			new LevelUp((RPGLevels) RPGLevels.plugin, RPGLevels.rpgclass, RPGLevels.rpg).VisualLVL(Bukkit.getPlayer(nickname));
 		} else {
 			DataManager.setPlayerData(nickname, "exp", exp);
 		}
@@ -86,7 +88,7 @@ public interface RPGLevelsAPI {
 		if (this.getPlayersNicks().contains(nickname)) {
 			clas = ((Bukkit.getPlayer(nickname) != null) ? RPGLevels.rpg.get(Bukkit.getPlayer(nickname)).getPclass()
 					: DataManager.getPlayerDataString(nickname, "class"));
-			if (DataManager.getClasses().contains(clas)) {
+			if (RPGLevels.rpgclass.keySet().contains(clas)) {
 				return clas;
 			}
 		}
@@ -94,7 +96,7 @@ public interface RPGLevelsAPI {
 	}
 
 	default void setPlayerClass(String nickname, String classname) {
-		if (!DataManager.getClasses().contains(classname)) {
+		if (!RPGLevels.rpgclass.keySet().contains(classname)) {
 			classname = "";
 		}
 		if (Bukkit.getPlayer(nickname) != null) {
@@ -157,7 +159,7 @@ public interface RPGLevelsAPI {
 	}
 
 	default List<String> getClassesList() {
-		return DataManager.getClasses();
+		return new ArrayList<String>(RPGLevels.rpgclass.keySet());
 	}
 
 	default void RemoveClass(String classname) {

@@ -45,7 +45,7 @@ public class TabCompeteCMD implements Listener {
 				|| (cmd.equalsIgnoreCase("/classremove ") && sender.hasPermission("rpglevels.cmd.classremove"))
 				|| (cmd.equalsIgnoreCase("/classinfo ") && sender.hasPermission("rpglevels.cmd.classinfo"))
 				|| (cmd.equalsIgnoreCase("/classedit ") && sender.hasPermission("rpglevels.cmd.classedit"))) {
-			e.setCompletions(DataManager.getClasses());
+			e.setCompletions(new ArrayList<String>(RPGLevels.rpgclass.keySet()));
 		}
 		ArrayList<String> l = new ArrayList<>();
 

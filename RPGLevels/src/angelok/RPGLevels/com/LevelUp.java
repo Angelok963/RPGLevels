@@ -1,5 +1,7 @@
 package angelok.RPGLevels.com;
 
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -9,16 +11,20 @@ import org.bukkit.event.player.PlayerExpChangeEvent;
 public class LevelUp implements Listener {
 
 	private static RPGLevels plugin;
-
-	public LevelUp(RPGLevels plugin) {
+	private HashMap<String, RPGClasses> clas;
+	private static  HashMap<Player, RPGPlayer> rpgp;
+	
+	public LevelUp(RPGLevels plugin, HashMap<String, RPGClasses> clas, HashMap<Player, RPGPlayer> rpgp) {
 		LevelUp.plugin = plugin;
+		this.clas = clas;
+		LevelUp.rpgp = rpgp;
 	}
 
 	@EventHandler
 	public void expChange(PlayerExpChangeEvent e) {
 
 		Player p = e.getPlayer();
-		RPGPlayer rpg = RPGLevels.rpg.get(p);
+		RPGPlayer rpg = rpgp.get(p);
 
 		String clas = rpg.getPclass();
 
@@ -44,7 +50,7 @@ public class LevelUp implements Listener {
 
 		rpg.setLvl(lvl1);
 		rpg.setExp(exp1 + in);
-		RPGLevels.rpg.put(p, rpg);
+		rpgp.put(p, rpg);
 
 		e.setAmount(0);
 
@@ -56,7 +62,7 @@ public class LevelUp implements Listener {
 
 		while (!isUp) {
 
-			RPGPlayer rpg2 = RPGLevels.rpg.get(p);
+			RPGPlayer rpg2 = rpgp.get(p);
 
 			int lvl2 = rpg2.getLvl();
 
@@ -77,12 +83,12 @@ public class LevelUp implements Listener {
 				rpg2.setLvl(lvl2 + 1);
 				rpg2.setExp(exp2 - cost);
 
-				RPGLevels.rpg.put(p, rpg2);
+				rpgp.put(p, rpg2);
 
 				p.setLevel(lvl2 + 1);
 				p.setExp(0F);
 
-				ChangeLvL.lvlUp(p);
+				ChangeLvL.lvlUp(p, rpgp, this.clas);
 
 				if (lvl2 + 1 != maxlvl)
 					p.sendMessage(Lang.newlvlattain().replace("{lvl}", String.valueOf(lvl2 + 1)));
@@ -107,9 +113,9 @@ public class LevelUp implements Listener {
 
 	}
 
-	public static void VisualLVL(Player p) {
+	public  void VisualLVL(Player p) {
 
-		RPGPlayer rpg = RPGLevels.rpg.get(p);
+		RPGPlayer rpg = rpgp.get(p);
 
 		int exp = rpg.getExp();
 

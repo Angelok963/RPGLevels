@@ -1,5 +1,7 @@
 package angelok.RPGLevels.com;
 
+import java.util.HashMap;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
@@ -11,9 +13,13 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class PlayerJoin implements Listener {
 
 	private RPGLevels plugin;
+	private  HashMap<Player, RPGPlayer> rpg;
+	private  HashMap<String, RPGClasses> rpgclass;
 
-	public PlayerJoin(RPGLevels plugin) {
+	public PlayerJoin(RPGLevels plugin, HashMap<Player, RPGPlayer> rpg, HashMap<String, RPGClasses> rpgclass) {
 		this.plugin = plugin;
+		this.rpg = rpg;
+		this.rpgclass = rpgclass;
 	}
 
 	@EventHandler
@@ -23,9 +29,9 @@ public class PlayerJoin implements Listener {
 
 		if (!DataManager.getPlayers().contains(player)) {
 
-			RPGLevels.rpg.put(p, new RPGPlayer(0, 0, 0, 0, "", 20.0, 20.0));
+			rpg.put(p, new RPGPlayer(0, 0, 0, 0, "", 20.0, 20.0));
 
-			DataManager.savePlayerData(p);
+			DataManager.savePlayerData(p, rpg);
 
 			String[] loc = plugin.getConfig().getString("firstspawn").split(":");
 
@@ -36,10 +42,10 @@ public class PlayerJoin implements Listener {
 
 			p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(DataManager.getPlayerDataDouble(player, "heal"));
 
-			DataManager.loadPlayerData(p);
+			 DataManager.loadPlayerData(p, rpg);
 
 			p.setLevel(DataManager.getPlayerDataInt(player, "lvl"));
-			LevelUp.VisualLVL(p);
+			new LevelUp(plugin, rpgclass, rpg).VisualLVL(p);
 		}
 
 	}
