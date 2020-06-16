@@ -30,20 +30,16 @@ public class CmdClass implements CommandExecutor, Listener {
 		this.plugin = plugin;
 	}
 
-	String noperms = "§c(§eRPGLevels§c) §6У вас §cнедостаточно §7прав!";
-	String noconsole = "§c(§eRPGLevels§c) §6Команда §cнедоступна §7из консоли!";
-	String Title = "§6[§0Выберите класс, за который будете играть§6]";
-
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String str, String[] args) {
 
 		if (!sender.hasPermission("rpglevels.cmd.class")) {
-			sender.sendMessage(noperms);
+			sender.sendMessage(Lang.nopermission());
 			return false;
 		}
 
 		if (!(sender instanceof Player)) {
-			sender.sendMessage(noconsole);
+			sender.sendMessage(Lang.nopermission());
 			return false;
 		}
 
@@ -54,13 +50,12 @@ public class CmdClass implements CommandExecutor, Listener {
 
 			int lvl = rpg.getLvl();
 			
-			String msg = "§c(§eRPGLevels§c) §7Ваш класс: §c" + rpg.getPclass()
-					+ "§7. Уровень: §c" + String.valueOf(lvl);
+			String msg = Lang.personalinfo().replace("{Class}", rpg.getPclass()).replace("{lvl}", String.valueOf(lvl));
 
 			if (plugin.getConfig().contains("Levels." + String.valueOf(lvl + 1)))
-				msg = msg + "§7, опыт: §c" + rpg.getExp() + " §7из §c"
-						+ plugin.getConfig().getInt("Levels." + String.valueOf(lvl + 1) + ".cost") + "§7.";
-
+			msg = msg + " " + Lang.personalinfo_exp().replace("{Exp}", String.valueOf(rpg.getExp())).replace("{ExpTolvl}", String.valueOf(plugin.getConfig().getInt("Levels." + String.valueOf(lvl + 1) + ".cost")));
+			
+			
 			p.sendMessage(msg);
 			return false;
 		}
@@ -77,7 +72,7 @@ public class CmdClass implements CommandExecutor, Listener {
 		else
 			t = 54;
 
-		Inventory inv = Bukkit.createInventory(null, t, Title);
+		Inventory inv = Bukkit.createInventory(null, t, Lang.chooseclasstitle());
 
 		ArrayList<String> name = new ArrayList<>();
 
@@ -147,7 +142,7 @@ public class CmdClass implements CommandExecutor, Listener {
 	@EventHandler
 	public void noDragg(InventoryDragEvent e) {
 
-		if (e.getInventory().getTitle().equals(Title))
+		if (e.getInventory().getTitle().equals(Lang.chooseclasstitle()))
 			e.setCancelled(true);
 
 	}
@@ -155,7 +150,7 @@ public class CmdClass implements CommandExecutor, Listener {
 	@EventHandler
 	public void Choose(InventoryClickEvent e) throws SQLException {
 
-		if (!e.getInventory().getTitle().equals(Title))
+		if (!e.getInventory().getTitle().equals(Lang.chooseclasstitle()))
 			return;
 
 		e.setCancelled(true);
@@ -197,7 +192,7 @@ public class CmdClass implements CommandExecutor, Listener {
 		
 		RPGLevels.rpg.put(p, rpg);
 		
-		p.sendMessage("§c(§eRPGLevels§c) §7Выбран класс §c" + clas + "§7!");		
+		p.sendMessage(Lang.choosedclass().replace("{Class}", clas));		
 	}
 
 }

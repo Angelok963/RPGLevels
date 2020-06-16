@@ -16,12 +16,12 @@ public class AutoSaveData extends BukkitRunnable {
 		for (Player p : Bukkit.getOnlinePlayers()) {
 
 			if (RPGLevels.plugin.getConfig().getBoolean("AutoSaveDataModule.broadcasted"))
-				p.sendMessage("§c(§eRPGLevels§c) §7Сохраняем ваши данные...");
+				p.sendMessage(Lang.savingdata());
 
 			DataManager.savePlayerData(p);
 			
 			if (RPGLevels.plugin.getConfig().getBoolean("AutoSaveDataModule.broadcasted"))
-				p.sendMessage("§c(§eRPGLevels§c) §7Данные §cуспешно §7сохранены...");
+				p.sendMessage(Lang.saveddata());
 		}
 
 		for (String classname : RPGLevels.rpgclass.keySet()) {

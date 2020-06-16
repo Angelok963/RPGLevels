@@ -9,26 +9,25 @@ public class CmdClassInfo implements CommandExecutor {
 
 	public CmdClassInfo(RPGLevels plugin) {}
 
-	String noperms = "§c(§eRPGLevels§c) §7У вас §cнедостаточно §7прав!";
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String str, String[] args) {
 		
 		
 		if(!sender.hasPermission("rpglevels.cmd.classinfo")){
-			sender.sendMessage(noperms);
+			sender.sendMessage(Lang.nopermission());
 			return false;
 		}
 		
 		if(args.length != 1){
-			sender.sendMessage("§c(§eRPGLevels§c) §7Команда введена §cневерно§7. Используйте §c/classinfo <название>");
+			sender.sendMessage(Lang.notvalidcmd());
 			return false;
 		}
 		
 		
 		
 		if(!DataManager.getClasses().contains(args[0])){
-			sender.sendMessage("§c(§eRPGLevels§c) §7Класс §c" + args[0] + " §7не найден!");
+			sender.sendMessage(Lang.classnotfound().replace("{Class}", args[0]));
 			return false;
 		}
 		
@@ -39,26 +38,26 @@ public class CmdClassInfo implements CommandExecutor {
 
 		//Выводим инфо о классе если имеется
 		if(info.getInfo().isEmpty())
-		sender.sendMessage("§c> §8[info]§7Информация о классе: §c<Не задана>");
+		sender.sendMessage(Lang.classinfo() + Lang.empty());
 		else{
-    	sender.sendMessage("§c> §8[info]§7Информация о классе:");
+    	sender.sendMessage(Lang.classinfo());
     	String[] m = info.getInfo().split("\\\\");
     	for(int a = 0; a<m.length; a++)
     		if(!m[a].isEmpty())
     	sender.sendMessage(ChatColor.translateAlternateColorCodes('&', m[a]));
 		}
 		
-		sender.sendMessage("§c> §8[item]§7Предмет в качестве иконки класса: §c" + info.getItem());
+		sender.sendMessage(Lang.classinfo_item().replace("{info}", info.getItem()));
 		
-		sender.sendMessage("§c> §8[changehealtolvl]§7Количество добавляемого здоровья за повышение уровня: §c" + info.getChangehealtolvl());
+		sender.sendMessage(Lang.classinfo_changehealtolvl().replace("{info}", String.valueOf(info.getChangehealtolvl())));
 		
-		sender.sendMessage("§c> §8[changemanatolvl]§7Количество добавляемой маны за повышение уровня: §c" + info.getChangemanatolvl());
+		sender.sendMessage(Lang.classinfo_changemanatolvl().replace("{info}", String.valueOf(info.getChangemanatolvl())));
 		
-		sender.sendMessage("§c> §8[defaultmana]§7Лимит маны в классе по умолчанию: §c" + info.getDefaultmana());
+		sender.sendMessage(Lang.classinfo_defaultmana().replace("{info}", String.valueOf(info.getDefaultmana())));
 		
-		sender.sendMessage("§c> §8[defaultheal]§7Лимит здоровья в классе по умолчанию: §c" + info.getDefaultheal());
+		sender.sendMessage(Lang.classinfo_defaultheal().replace("{info}", String.valueOf(info.getDefaultheal())));
 
-		sender.sendMessage("§c> §8[manapersecond]§7Скорость регенерации маны в классе: §c" + info.getManapersecond() + "/сек.");
+		sender.sendMessage(Lang.classinfo_manapersecond().replace("{info}", String.valueOf(info.getManapersecond())));
 		
 		sender.sendMessage("\n§7===========================================================");
 		return true;

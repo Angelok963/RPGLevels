@@ -26,9 +26,13 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 
 	private File playerdata = new File(getDataFolder() + File.separator + "Data" + File.separator + "players.yml");
 	private File classdata = new File(getDataFolder() + File.separator + "Data" + File.separator + "classes.yml");
+	private File filelang = new File(getDataFolder() + File.separator + "lang.yml");
 
 	protected static YamlConfiguration datap;
 	private static File pdata;
+
+	protected static YamlConfiguration lang;
+	protected static File langfile;
 
 	protected static YamlConfiguration classes;
 	private static File cdata;
@@ -38,16 +42,37 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 	@Override
 	public void onEnable() {
 
+		RPGLevels.plugin = this;
+		langfile = filelang;
 		pdata = playerdata;
 		cdata = classdata;
-		RPGLevels.plugin = this;
+		YamlConfiguration datap = YamlConfiguration.loadConfiguration(playerdata);
+		YamlConfiguration classes = YamlConfiguration.loadConfiguration(classdata);
+		YamlConfiguration lang = YamlConfiguration.loadConfiguration(langfile);
 
+		RPGLevels.lang = lang;
+		RPGLevels.classes = classes;
+		RPGLevels.datap = datap;
+
+		// загрузка языкового файла
+
+		if(!langfile.exists())
+			Lang.loadDefautlLang();
+		
+		// Если конфиг не существует достаём его из jar и сохраняем
+		File config = new File(getDataFolder() + File.separator + "config.yml");
+		if (!config.exists()) {
+			getConfig().options().copyDefaults(true);
+			saveDefaultConfig();
+			saveConfig();
+			getServer().getConsoleSender().sendMessage("§с(§eRPGLevels§с) §7Создан конфигурационный файл плагина.");
+
+		}
 		switch (getConfig().getString("StorageType")) {
 		case "file":
 
 			if (!classdata.exists()) {
-
-
+				saveClassData();
 				classes.set("Лучник.info", "Класс по умолчанию\\можно менять");
 				classes.set("Лучник.item", "BOW");
 				classes.set("Лучник.defaultheal", 20.5);
@@ -60,9 +85,9 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 
 			}
 
-			YamlConfiguration datap = YamlConfiguration.loadConfiguration(playerdata);
-			YamlConfiguration classes = YamlConfiguration.loadConfiguration(classdata);
-
+			if (!pdata.exists()) {
+				savePlayerData();
+			}
 			RPGLevels.classes = classes;
 
 			RPGLevels.datap = datap;
@@ -132,17 +157,6 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 		getCommand("classedit").setExecutor(new CmdClassEdit(this));
 		getCommand("attributemanage").setExecutor(new CmdAttributeManage(this));
 
-
-		// Если конфиг не существует достаём его из jar и сохраняем
-		File config = new File(getDataFolder() + File.separator + "config.yml");
-		if (!config.exists()) {
-			getConfig().options().copyDefaults(true);
-			saveDefaultConfig();
-			saveConfig();
-			getServer().getConsoleSender().sendMessage("§с(§eRPGLevels§с) §7Создан конфигурационный файл плагина.");
-
-		}
-
 		new ManaUpdateTask(this).runTaskTimerAsynchronously(this, 0, 20);
 
 		if (getConfig().getBoolean("AutoSaveDataModule.enabled"))
@@ -152,12 +166,13 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 			saveTask = null;
 
 		ArrayList<String> list = DataManager.getClasses();
-		
-		if(list.size() == 0){
+
+		if (list.size() == 0) {
 			CreateClass("Маг", "&aИнформация по умолчанию \n&7можно менять", Material.DIAMOND, 20, 0, 20, 0, 1);
-		
-		rpgclass.put("Маг", new RPGClasses("&aИнформация по умолчанию \n&7можно менять", "DIAMOND", 20, 0, 20, 0, 1));
-		} 
+
+			rpgclass.put("Маг",
+					new RPGClasses("&aИнформация по умолчанию \n&7можно менять", "DIAMOND", 20, 0, 20, 0, 1));
+		}
 		for (String classname : list) {
 
 			DataManager.loadClassData(classname);
@@ -166,33 +181,34 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 
 		getServer().getConsoleSender()
 				.sendMessage("§с(§eRPGLevels§с) §7Плагин успешно запущен. Используемый тип хранения данных: §c"
-						+ getConfig().getString("StorageType") + "§7Зарегистрировано §c" + ((list.size() != 0) ? list.size() : 1)  + "§7 классов.");
+						+ getConfig().getString("StorageType") + "§7Зарегистрировано §c"
+						+ ((list.size() != 0) ? list.size() : 1) + "§7 классов.");
 	}
 
 	@Override
 	public void onDisable() {
-		
-		
-		for(String classname : rpgclass.keySet()){
-		DataManager.saveClassData(classname);
+
+		for (String classname : rpgclass.keySet()) {
+			DataManager.saveClassData(classname);
 		}
-		
-		for(Player p : Bukkit.getOnlinePlayers()){
+
+		for (Player p : Bukkit.getOnlinePlayers()) {
 			DataManager.savePlayerData(p);
 		}
-		
+
 		for (Player p : Bukkit.getOnlinePlayers()) {
 
 			p.kickPlayer("§7Сервер перезагружается! Пожалуйста, переподключитесь.");
 
 		}
-		
-		try {
-			SQLConnection.c.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if (getConfig().getString("StorageType").equals("mysql")
+				|| getConfig().getString("StorageType").equals("sqlite")) {
+			try {
+				SQLConnection.c.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-
 	}
 
 	// Метод сохранения данных игроков (файл datap.yml)
@@ -217,4 +233,5 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 
 	}
 
+	
 }
