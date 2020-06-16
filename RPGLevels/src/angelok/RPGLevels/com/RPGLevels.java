@@ -11,10 +11,12 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import angelok.RPGLevels.com.AttributeManager.AttributsManager;
+import angelok.RPGLevels.com.baseAttributes.DamageBoost;
 import angelok.RPGLevels.com.cmds.CmdAttributeManage;
 import angelok.RPGLevels.com.cmds.CmdClass;
 import angelok.RPGLevels.com.cmds.CmdClassCreate;
@@ -150,12 +152,15 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 			return;
 		}
 
-		Bukkit.getPluginManager().registerEvents(new TabCompeteCMD(this), this);
-		Bukkit.getPluginManager().registerEvents(new PlayerLeave(rpg), this);
-		Bukkit.getPluginManager().registerEvents(new LevelUp(this, rpgclass, rpg), this);
-		Bukkit.getPluginManager().registerEvents(new PlayerJoin(this, rpg, rpgclass), this);
-		Bukkit.getPluginManager().registerEvents(new DeathExpSave(this), this);
-		Bukkit.getPluginManager().registerEvents(new CmdClass(this, rpg, rpgclass), this);
+		PluginManager m = Bukkit.getPluginManager();
+		
+		m.registerEvents(new TabCompeteCMD(this), this);
+		m.registerEvents(new PlayerLeave(rpg), this);
+		m.registerEvents(new LevelUp(this, rpgclass, rpg), this);
+		m.registerEvents(new PlayerJoin(this, rpg, rpgclass), this);
+		m.registerEvents(new DeathExpSave(), this);
+		m.registerEvents(new CmdClass(this, rpg, rpgclass), this);
+		m.registerEvents(new DamageBoost(), this);
 		getCommand("level").setExecutor(new CmdLevel(this, rpg, rpgclass, lang, classes, datap, saveTask));
 		getCommand("class").setExecutor(new CmdClass(this, rpg, rpgclass));
 		getCommand("classcreate").setExecutor(new CmdClassCreate(rpgclass));

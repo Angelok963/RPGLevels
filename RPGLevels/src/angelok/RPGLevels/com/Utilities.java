@@ -37,7 +37,7 @@ public class Utilities
         }
         double max = clas.isEmpty() ? 0.0 : (RPGLevels.rpgclass.get(clas).getDefaultmana() + RPGLevels.rpgclass.get(clas).getChangemanatolvl() * (lvl - 1));
         if (isOnline) {
-            return max + max / 100.0 * DefaultAttributes.getManaStorageBoost(Bukkit.getPlayer(player));
+            return max + max / 100.0 * DefaultAttributes.getAttributesValueOfDouble(Bukkit.getPlayer(player), "ManaStorageBoost");
         }
         return max;
     }
@@ -45,6 +45,6 @@ public class Utilities
     
     public static double getManaPerSecond(Player player, HashMap<Player, RPGPlayer> rpg,  HashMap<String, RPGClasses> rpgclass) {
     	double s = rpgclass.get(rpg.get(player).getPclass()).getManapersecond();
-		return s + s / 100.0 * DefaultAttributes.getManaRegenBoost(player);
+		return s + s / 100.0 * DefaultAttributes.getAttributesValueOfDouble(player, "ManaRegenBoost");
 	}
 }

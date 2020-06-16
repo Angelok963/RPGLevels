@@ -6,7 +6,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 
 public class DeathExpSave implements Listener{
 
-	public DeathExpSave(RPGLevels plugin) {}
+	public DeathExpSave() {}
 		
 	@EventHandler
 	public void LevelChange(PlayerDeathEvent e){

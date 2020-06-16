@@ -18,22 +18,24 @@ public class DefaultAttributes {
 		return item;
 	}
 
-	public static double getManaStorageBoost(Player player) {
+	public static double getAttributesValueOfDouble(Player player, String attributeType) {
 		double boost = 0.0;
 		for (ItemStack i : getSlots(player)) {
-			if (AttributeManager.hasAttribute(i, "ManaStorageBoost")) {
-				boost = boost + AttributeManager.getAttributeValueDouble(i, "ManaStorageBoost");
+			if (AttributeManager.hasAttribute(i, attributeType)) {
+				boost = boost + AttributeManager.getAttributeValueDouble(i, attributeType);
 			}
 		}
 		return boost;
 	}
-	public static double getManaRegenBoost(Player player) {
-		double boost = 0.0;
+
+	public static int getAttributesValueOfInt(Player player, String attributeType) {
+		int boost = 0;
 		for (ItemStack i : getSlots(player)) {
-			if (AttributeManager.hasAttribute(i, "ManaRegenBoost")) {
-				boost = boost + AttributeManager.getAttributeValueDouble(i, "ManaRegenBoost");
+			if (AttributeManager.hasAttribute(i, attributeType)) {
+				boost = boost + AttributeManager.getAttributeValueInt(i, attributeType);
 			}
 		}
 		return boost;
 	}
+
 }
