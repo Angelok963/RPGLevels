@@ -102,8 +102,8 @@ public class CmdLevel implements CommandExecutor {
 			String old_data = plugin.getConfig().getString("StorageType");
 			plugin.reloadConfig();
 
-			this.lang = YamlConfiguration
-					.loadConfiguration(new File(plugin.getDataFolder() + File.separator + "lang.yml"));
+			Utilities.loadLangYML(YamlConfiguration
+					.loadConfiguration(new File(plugin.getDataFolder() + File.separator + "lang.yml")));
 
 			String new_data = plugin.getConfig().getString("StorageType");
 			if (new_data.equals("file")) {
@@ -125,6 +125,10 @@ public class CmdLevel implements CommandExecutor {
 				if (!playerdata.exists()) {
 					RPGLevels.savePlayerData();
 				}
+
+				Utilities.loadDataItemsYML(YamlConfiguration.loadConfiguration(new File(
+						plugin.getDataFolder() + File.separator + "Data" + File.separator + "customitems.yml")));
+
 				Utilities.loadDataPlayerYML(YamlConfiguration.loadConfiguration(
 						new File(plugin.getDataFolder() + File.separator + "Data" + File.separator + "players.yml")));
 				Utilities.loadDataClassesYML(YamlConfiguration.loadConfiguration(
@@ -139,10 +143,10 @@ public class CmdLevel implements CommandExecutor {
 				msg = Lang.cfgreload_warn();
 			}
 			if (plugin.getConfig().getBoolean("AutoSaveDataModule.enabled")) {
-				if(this.saveTask != null)
-				if (!this.saveTask.isCancelled()) {
-					this.saveTask.cancel();
-				}
+				if (this.saveTask != null)
+					if (!this.saveTask.isCancelled()) {
+						this.saveTask.cancel();
+					}
 
 				if (f != null)
 					if (!f.isCancelled())
@@ -354,7 +358,7 @@ public class CmdLevel implements CommandExecutor {
 
 				if (isOnline) {
 					f = rpg.getHeal() + (editheal * clas.get(rpg.getPclass()).getChangehealtolvl());
-						rpg.setHeal(f);
+					rpg.setHeal(f);
 					p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(f);
 				} else {
 					f = DataManager.getPlayerDataDouble(args[1], "heal") + (editheal
@@ -447,6 +451,8 @@ public class CmdLevel implements CommandExecutor {
 			for (Player player : Bukkit.getOnlinePlayers()) {
 				DataManager.savePlayerData(player, rpgp);
 			}
+
+			RPGLevels.saveItemsData();
 			sender.sendMessage(Lang.cmd_save_end());
 			return true;
 		}
@@ -476,6 +482,12 @@ public class CmdLevel implements CommandExecutor {
 			sender.sendMessage(Lang.cmd_sync_end());
 			return true;
 		}
+
+		case "menu": {
+
+			return CmdCreativeMenu.creative(sender);
+		}
+
 		default:
 			break;
 		}

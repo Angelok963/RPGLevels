@@ -14,14 +14,13 @@ public class DataManager {
 
 	public static void setPlayerData(String player, String DataName, String value) {
 
-		switch (type) {
-		case "file":
+                  if(type.equals("file")){
 
 			RPGLevels.datap.set(player + "." + DataName, value);
 			RPGLevels.savePlayerData();
 			return;
 
-		default:
+                  }else {
 			try {
 				ResultSet r = SQLConnection.getResult("SELECT count(*) FROM players WHERE name = '" + player + "';");
 				r.next();
@@ -43,14 +42,13 @@ public class DataManager {
 
 	public static void setPlayerData(String player, String DataName, int value) {
 
-		switch (type) {
-		case "file":
+		if(type.equals("file")){
 
 			RPGLevels.datap.set(player + "." + DataName, value);
 			RPGLevels.savePlayerData();
 			return;
 
-		default:
+		}else {
 			try {
 				ResultSet r = SQLConnection.getResult("SELECT count(*) FROM players WHERE name = '" + player + "';");
 				r.next();
@@ -71,14 +69,13 @@ public class DataManager {
 
 	public static void setPlayerData(String player, String DataName, double value) {
 
-		switch (type) {
-		case "file":
+		if(type.equals("file")){
 
 			RPGLevels.datap.set(player + "." + DataName, value);
 			RPGLevels.savePlayerData();
 			return;
 
-		default:
+		}else {
 			try {
 				ResultSet r = SQLConnection.getResult("SELECT count(*) FROM players WHERE name = '" + player + "';");
 				r.next();
@@ -99,12 +96,11 @@ public class DataManager {
 
 	public static int getPlayerDataInt(String player, String DataName) {
 
-		switch (type) {
-		case "file":
+		if(type.equals("file")){
 
 			return RPGLevels.datap.getInt(player + "." + DataName);
 
-		default:
+		}else {
 			try {
 				ResultSet res = SQLConnection
 						.getResult("SELECT " + DataName + " FROM players WHERE name='" + player + "';");
@@ -120,12 +116,10 @@ public class DataManager {
 
 	public static double getPlayerDataDouble(String player, String DataName) {
 
-		switch (type) {
-		case "file":
-
+		if(type.equals("file")){
 			return RPGLevels.datap.getDouble(player + "." + DataName);
 
-		default:
+		}else {
 			try {
 				ResultSet res = SQLConnection
 						.getResult("SELECT " + DataName + " FROM players WHERE name='" + player + "';");
@@ -141,12 +135,11 @@ public class DataManager {
 
 	public static String getPlayerDataString(String player, String DataName) {
 
-		switch (type) {
-		case "file":
+		if(type.equals("file")){
 
 			return RPGLevels.datap.getString(player + "." + DataName);
 
-		default:
+		}else {
 			try {
 				ResultSet res = SQLConnection
 						.getResult("SELECT " + DataName + " FROM players WHERE name='" + player + "';");
@@ -162,8 +155,7 @@ public class DataManager {
 
 	public static ArrayList<String> getPlayers() {
 
-		switch (type) {
-		case "file":
+		if(type.equals("file")){
 
 			ArrayList<String> l = new ArrayList<>();
 
@@ -171,7 +163,7 @@ public class DataManager {
 				l.add(s);
 			return l;
 
-		default:
+		}else {
 
 			ArrayList<String> name = new ArrayList<>();
 			try {
@@ -189,14 +181,13 @@ public class DataManager {
 
 	public static void setClassData(String classname, String DataName, String value) {
 
-		switch (type) {
-		case "file":
+		if(type.equals("file")){
 
 			RPGLevels.classes.set(classname + "." + DataName, value);
 			RPGLevels.saveClassData();
 			return;
 
-		default:
+		}else {
 			try {
 				ResultSet r = SQLConnection
 						.getResult("SELECT count(*) FROM classes WHERE classname = '" + classname + "';");
@@ -220,14 +211,13 @@ public class DataManager {
 
 	public static void setClassData(String classname, String DataName, int value) {
 
-		switch (type) {
-		case "file":
+		if(type.equals("file")){
 
 			RPGLevels.classes.set(classname + "." + DataName, value);
 			RPGLevels.saveClassData();
 			return;
 
-		default:
+		}else {
 			try {
 				ResultSet r = SQLConnection
 						.getResult("SELECT count(*) FROM classes WHERE classname = '" + classname + "';");
@@ -251,14 +241,13 @@ public class DataManager {
 
 	public static void setClassData(String classname, String DataName, double value) {
 
-		switch (type) {
-		case "file":
+		if(type.equals("file")){
 
 			RPGLevels.classes.set(classname + "." + DataName, value);
 			RPGLevels.saveClassData();
 			return;
 
-		default:
+		}else {
 			try {
 				ResultSet r = SQLConnection
 						.getResult("SELECT count(*) FROM classes WHERE classname = '" + classname + "';");
@@ -282,12 +271,11 @@ public class DataManager {
 
 	public static String getClassDataString(String classname, String DataName) {
 
-		switch (type) {
-		case "file":
+		if(type.equals("file")){
 
 			return RPGLevels.classes.getString(classname + "." + DataName);
 
-		default:
+		}else {
 			try {
 				ResultSet res = SQLConnection
 						.getResult("SELECT " + DataName + " FROM classes WHERE classname='" + classname + "';");
@@ -303,12 +291,11 @@ public class DataManager {
 
 	public static int getClassDataInt(String classname, String DataName) {
 
-		switch (type) {
-		case "file":
+		if(type.equals("file")){
 
 			return RPGLevels.classes.getInt(classname + "." + DataName);
 
-		default:
+		}else {
 			try {
 				ResultSet res = SQLConnection
 						.getResult("SELECT " + DataName + " FROM classes WHERE classname='" + classname + "';");
@@ -324,12 +311,11 @@ public class DataManager {
 
 	public static double getClassDataDouble(String classname, String DataName) {
 
-		switch (type) {
-		case "file":
+		if(type.equals("file")){
 
 			return RPGLevels.classes.getDouble(classname + "." + DataName);
 
-		default:
+		}else {
 			try {
 				ResultSet res = SQLConnection
 						.getResult("SELECT " + DataName + " FROM classes WHERE classname='" + classname + "';");
@@ -345,8 +331,7 @@ public class DataManager {
 
 	public static ArrayList<String> getClasses() {
 
-		switch (type) {
-		case "file":
+		if(type.equals("file")){
 
 			ArrayList<String> l = new ArrayList<>();
 
@@ -354,7 +339,7 @@ public class DataManager {
 				l.add(s);
 			return l;
 
-		default:
+		}else {
 
 			ArrayList<String> name = new ArrayList<>();
 			try {
@@ -372,14 +357,13 @@ public class DataManager {
 
 	public static void RemoveClass(String classname) {
 
-		switch (type) {
-		case "file":
+		if(type.equals("file")){
 
 			RPGLevels.classes.set(classname, null);
 			RPGLevels.saveClassData();
 			return;
 
-		default:
+		}else {
 			try {
 				ResultSet r = SQLConnection
 						.getResult("SELECT count(*) FROM classes WHERE classname = '" + classname + "';");

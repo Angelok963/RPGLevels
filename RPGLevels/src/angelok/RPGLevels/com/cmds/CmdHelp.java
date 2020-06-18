@@ -70,7 +70,8 @@ public class CmdHelp {
 			return true;
 		case 3:
 			clicableText(sender, "/amanage remove <имя атрибута>", "удалить тег с предмета в руке");
-			for (int a = 0; a < 16; a++)
+			clicableText(sender, "/lvl menu", "открыть творческое меню с кастомными вещами");
+			for (int a = 0; a < 15; a++)
 				sender.sendMessage("");
 			pagechanger(sender, page);
 		default:

@@ -6,7 +6,7 @@ import org.bukkit.ChatColor;
 
 public class Lang {
 
-	private static String prefix() {
+	public static String prefix() {
 		return RPGLevels.lang.getString("prefix");
 	}
 	
@@ -230,9 +230,111 @@ public class Lang {
 		return ChatColor.translateAlternateColorCodes('&',prefix() + RPGLevels.lang.getString("infoupdate_class_reset"));
 	}
 
+	public static String getwithereffect() {
+		if(!RPGLevels.lang.getString("getwithereffect").isEmpty())
+		return ChatColor.translateAlternateColorCodes('&',prefix() + RPGLevels.lang.getString("getwithereffect"));
+		else return "";
+	}
+
+	public static String givewithereffect() {
+		if(!RPGLevels.lang.getString("givewithereffect").isEmpty())
+		return ChatColor.translateAlternateColorCodes('&',prefix() + RPGLevels.lang.getString("givewithereffect"));
+		else return "";
+	}
+	
+	
+	public static String getposioneffect() {
+		if(!RPGLevels.lang.getString("getposioneffect").isEmpty())
+		return ChatColor.translateAlternateColorCodes('&',prefix() + RPGLevels.lang.getString("getposioneffect"));
+		else return "";
+	}
+
+	public static String giveposioneffect() {
+		if(!RPGLevels.lang.getString("giveposioneffect").isEmpty())
+		return ChatColor.translateAlternateColorCodes('&',prefix() + RPGLevels.lang.getString("giveposioneffect"));
+		else return "";
+	}
+	
+	public static String getfireeffect() {
+		if(!RPGLevels.lang.getString("getfireeffect").isEmpty())
+		return ChatColor.translateAlternateColorCodes('&',prefix() + RPGLevels.lang.getString("getfireeffect"));
+		else return "";
+	}
+
+	public static String givefireeffect() {
+		if(!RPGLevels.lang.getString("givefireeffect").isEmpty())
+		return ChatColor.translateAlternateColorCodes('&',prefix() + RPGLevels.lang.getString("givefireeffect"));
+		else return "";
+	}
+	
+	public static String getblindnesseffect() {
+		if(!RPGLevels.lang.getString("getblindnesseffect").isEmpty())
+		return ChatColor.translateAlternateColorCodes('&',prefix() + RPGLevels.lang.getString("getblindnesseffect"));
+		else return "";
+	}
+
+	public static String giveblindnesseffect() {
+		if(!RPGLevels.lang.getString("giveblindnesseffect").isEmpty())
+		return ChatColor.translateAlternateColorCodes('&',prefix() + RPGLevels.lang.getString("giveblindnesseffect"));
+		else return "";
+	}
+	
+	public static String getslownesseffect() {
+		if(!RPGLevels.lang.getString("getslownesseffect").isEmpty())
+		return ChatColor.translateAlternateColorCodes('&',prefix() + RPGLevels.lang.getString("getslownesseffect"));
+		else return "";
+	}
+
+	public static String giveslownesseffect() {
+		if(!RPGLevels.lang.getString("giveslownesseffect").isEmpty())
+		return ChatColor.translateAlternateColorCodes('&',prefix() + RPGLevels.lang.getString("giveslownesseffect"));
+		else return "";
+	}
+	
+	public static String giveregenerationeffect() {
+		if(!RPGLevels.lang.getString("giveregenerationeffect").isEmpty())
+		return ChatColor.translateAlternateColorCodes('&',prefix() + RPGLevels.lang.getString("giveregenerationeffect"));
+		else return "";
+	}
+	
+	public static String creativemenutitle() {
+		return ChatColor.translateAlternateColorCodes('&',RPGLevels.lang.getString("creativemenutitle"));
+	}
+	
+	public static String creativemenunext() {
+		return ChatColor.translateAlternateColorCodes('&',RPGLevels.lang.getString("creativemenunext"));
+	}
+	
+	public static String creativemenuundo() {
+		return ChatColor.translateAlternateColorCodes('&',RPGLevels.lang.getString("creativemenuundo"));
+	}
+	
+	
 	public static void loadDefautlLang() {
 		saveLang();
 		RPGLevels.lang.set("prefix", "&a&lRPG &r&b>>  ");
+		
+		RPGLevels.lang.set("creativemenuundo", "&7Предыдущая страница");
+		RPGLevels.lang.set("creativemenunext", "&7Следующая страница");
+		
+		RPGLevels.lang.set("creativemenutitle", "&6[&7Список &cRPG &7предметов&6]");
+		
+		RPGLevels.lang.set("giveregenerationeffect", "&7Вы получили эффект &cрегенерации &7на &c{time} &7секунд!");
+		
+		RPGLevels.lang.set("giveslownesseffect", "&7Вы замедлили цель на &c{percent}% &7на &c{time} &7секунд!");
+		RPGLevels.lang.set("getslownesseffect", "&7Вас замедлили на &c{percent}% &7на &c{time} &7секунд!");
+		
+		RPGLevels.lang.set("giveblindnesseffect", "&7Вы ослепили цель на &c{time} &7секунд!");
+		RPGLevels.lang.set("getblindnesseffect", "&7Вас ослепили &7на &c{time} &7секунд!");
+		
+		RPGLevels.lang.set("givefireeffect", "&7Вы подожгли цель на &c{time} &7секунд!");
+		RPGLevels.lang.set("getfireeffect", "&7Вас подожгли &7на &c{time} &7секунд!");
+		
+		RPGLevels.lang.set("giveposioneffect", "&7Вы наложили эффект &cотравления &7на &c{time} &7секунд!");
+		RPGLevels.lang.set("getposioneffect", "&7На вас наложен эффект &cотравления &7на &c{time} &7секунд!");
+		
+		RPGLevels.lang.set("givewithereffect", "&7Вы наложили эффект &cиссушения &7на &c{time} &7секунд!");
+		RPGLevels.lang.set("getwithereffect", "&7На вас наложен эффект &cиссушения &7на &c{time} &7секунд!");
 		RPGLevels.lang.set("savingdata", "&7Сохраняем ваши данные...");
 		RPGLevels.lang.set("saveddata", "&7Данные &cуспешно &7сохранены...");
 		RPGLevels.lang.set("notpermission", "&7У вас &cнедостаточно &7прав!");

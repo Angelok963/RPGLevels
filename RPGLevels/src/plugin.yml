@@ -1,6 +1,6 @@
 name: RPGLevels
 main: angelok.RPGLevels.com.RPGLevels
-version: 1.0
+version: 1.0 beta
 author: [Angelok]
 commands:
     level:

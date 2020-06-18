@@ -35,6 +35,9 @@ public class TabCompeteCMD implements Listener {
 			if (sender.hasPermission("rpglevels.cmd.setrpgspawn")) {
 				list.add("setrpgspawn");
 			}
+			if (sender.hasPermission("rpglevels.cmd.menu")) {
+				list.add("menu");
+			}
 			e.setCompletions(list);
 		}
 		if ((cmd.equalsIgnoreCase("/level see ") && sender.hasPermission("rpglevels.cmd.see"))

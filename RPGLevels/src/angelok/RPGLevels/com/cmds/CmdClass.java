@@ -27,6 +27,7 @@ import angelok.RPGLevels.com.Lang;
 import angelok.RPGLevels.com.RPGClasses;
 import angelok.RPGLevels.com.RPGLevels;
 import angelok.RPGLevels.com.RPGPlayer;
+import angelok.RPGLevels.com.Utilities;
 
 public class CmdClass implements CommandExecutor, Listener {
 
@@ -92,7 +93,7 @@ public class CmdClass implements CommandExecutor, Listener {
 			if (a < name.size()) {
 
 				if (clas.get(name.get(a)).getItem().toUpperCase().equals("AIR"))
-					inv.setItem(a + 9, getButton(" ", (short) 15));
+					inv.setItem(a + 9, Utilities.getButton(" ", (short) 15));
 				else {
 
 					ItemStack i = new ItemStack(Material.getMaterial(clas.get(name.get(a)).getItem().toUpperCase()));
@@ -126,7 +127,7 @@ public class CmdClass implements CommandExecutor, Listener {
 
 		for (int g = 0; g < t; g++) {
 			if (inv.getItem(g) == null)
-				inv.setItem(g, getButton(" ", (short) 15));
+				inv.setItem(g, Utilities.getButton(" ", (short) 15));
 		}
 
 		p.openInventory(inv);
@@ -134,16 +135,7 @@ public class CmdClass implements CommandExecutor, Listener {
 		return true;
 	}
 
-	private ItemStack getButton(String name, short data) {
-
-		ItemStack i = new ItemStack(Material.STAINED_GLASS_PANE);
-		i.setDurability(data);
-		ItemMeta m = i.getItemMeta();
-		m.setDisplayName(name);
-		i.setItemMeta(m);
-
-		return i;
-	}
+	
 
 	@EventHandler
 	public void noDragg(InventoryDragEvent e) {

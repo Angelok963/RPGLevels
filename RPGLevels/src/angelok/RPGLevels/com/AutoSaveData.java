@@ -33,5 +33,6 @@ public class AutoSaveData extends BukkitRunnable {
 		for (String classname : clas.keySet()) {
 			DataManager.saveClassData(classname, clas);
 		}
+		
 	}
 }

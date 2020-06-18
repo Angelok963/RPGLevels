@@ -8,21 +8,33 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitTask;
 
 import angelok.RPGLevels.com.AttributeManager.AttributsManager;
+import angelok.RPGLevels.com.baseAttributes.BlindnessEffect;
+import angelok.RPGLevels.com.baseAttributes.DamageAbsorption;
 import angelok.RPGLevels.com.baseAttributes.DamageBoost;
+import angelok.RPGLevels.com.baseAttributes.FireEffect;
+import angelok.RPGLevels.com.baseAttributes.MagicShield;
+import angelok.RPGLevels.com.baseAttributes.PoisonEffect;
+import angelok.RPGLevels.com.baseAttributes.RegenerationDamage;
+import angelok.RPGLevels.com.baseAttributes.SlownessEffect;
+import angelok.RPGLevels.com.baseAttributes.WitherEffect;
 import angelok.RPGLevels.com.cmds.CmdAttributeManage;
 import angelok.RPGLevels.com.cmds.CmdClass;
 import angelok.RPGLevels.com.cmds.CmdClassCreate;
 import angelok.RPGLevels.com.cmds.CmdClassEdit;
 import angelok.RPGLevels.com.cmds.CmdClassInfo;
 import angelok.RPGLevels.com.cmds.CmdClassRemove;
+import angelok.RPGLevels.com.cmds.CmdCreativeMenu;
 import angelok.RPGLevels.com.cmds.CmdLevel;
 
 public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsManager {
@@ -33,15 +45,22 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 
 	protected static HashMap<String, RPGClasses> rpgclass = new HashMap<>();
 
+	private static HashMap<LivingEntity, Double> freezingmobs = new HashMap<>();
+	private static HashMap<Player, Float> freezingplayers = new HashMap<>();
+
 	private File playerdata = new File(getDataFolder() + File.separator + "Data" + File.separator + "players.yml");
 	private File classdata = new File(getDataFolder() + File.separator + "Data" + File.separator + "classes.yml");
 	private File filelang = new File(getDataFolder() + File.separator + "lang.yml");
+	private File fileitems = new File(getDataFolder() + File.separator + "Data" + File.separator + "customitems.yml");
 
 	protected static YamlConfiguration datap;
 	private static File pdata;
 
 	protected static YamlConfiguration lang;
 	protected static File langfile;
+
+	protected static YamlConfiguration items;
+	private static File itemsfile;
 
 	protected static YamlConfiguration classes;
 	private static File cdata;
@@ -51,10 +70,16 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 	@Override
 	public void onEnable() {
 
+		// загрузка креатив меню
+
+		saveResource("Data" + File.separator + "customitems.yml", false);
+
 		RPGLevels.plugin = this;
 		langfile = filelang;
 		pdata = playerdata;
 		cdata = classdata;
+		itemsfile = fileitems;
+		YamlConfiguration items = YamlConfiguration.loadConfiguration(itemsfile);
 		YamlConfiguration datap = YamlConfiguration.loadConfiguration(playerdata);
 		YamlConfiguration classes = YamlConfiguration.loadConfiguration(classdata);
 		YamlConfiguration lang = YamlConfiguration.loadConfiguration(langfile);
@@ -62,6 +87,7 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 		RPGLevels.lang = lang;
 		RPGLevels.classes = classes;
 		RPGLevels.datap = datap;
+		RPGLevels.items = items;
 
 		// загрузка языкового файла
 
@@ -153,7 +179,7 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 		}
 
 		PluginManager m = Bukkit.getPluginManager();
-		
+
 		m.registerEvents(new TabCompeteCMD(this), this);
 		m.registerEvents(new PlayerLeave(rpg), this);
 		m.registerEvents(new LevelUp(this, rpgclass, rpg), this);
@@ -161,6 +187,16 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 		m.registerEvents(new DeathExpSave(), this);
 		m.registerEvents(new CmdClass(this, rpg, rpgclass), this);
 		m.registerEvents(new DamageBoost(), this);
+		m.registerEvents(new WitherEffect(), this);
+		m.registerEvents(new PoisonEffect(), this);
+		m.registerEvents(new FireEffect(), this);
+		m.registerEvents(new BlindnessEffect(), this);
+		m.registerEvents(new SlownessEffect(freezingmobs, freezingplayers), this);
+		new SlownessEffect(freezingmobs, freezingplayers).runTaskTimer(this, 0, 1);
+		m.registerEvents(new RegenerationDamage(), this);
+		m.registerEvents(new DamageAbsorption(), this);
+		m.registerEvents(new MagicShield(rpg), this);
+		m.registerEvents(new CmdCreativeMenu(items), this);
 		getCommand("level").setExecutor(new CmdLevel(this, rpg, rpgclass, lang, classes, datap, saveTask));
 		getCommand("class").setExecutor(new CmdClass(this, rpg, rpgclass));
 		getCommand("classcreate").setExecutor(new CmdClassCreate(rpgclass));
@@ -187,7 +223,7 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 		}
 		for (String classname : list) {
 
-		rpgclass = DataManager.loadClassData(classname, rpgclass);
+			rpgclass = DataManager.loadClassData(classname, rpgclass);
 
 		}
 
@@ -195,6 +231,7 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 				.sendMessage("§с(§eRPGLevels§с) §7Плагин успешно запущен. Используемый тип хранения данных: §c"
 						+ getConfig().getString("StorageType") + "§7Зарегистрировано §c"
 						+ ((list.size() != 0) ? list.size() : 1) + "§7 классов.");
+
 	}
 
 	@Override
@@ -207,7 +244,16 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			DataManager.savePlayerData(p, rpg);
 		}
-
+		for (LivingEntity e : freezingmobs.keySet()) {
+			e.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(freezingmobs.get(e));
+			if (e.hasPotionEffect(PotionEffectType.SLOW))
+				e.removePotionEffect(PotionEffectType.SLOW);
+		}
+		for (Player p : freezingplayers.keySet()) {
+			p.setWalkSpeed(freezingplayers.get(p));
+			if (p.hasPotionEffect(PotionEffectType.SLOW))
+				p.removePotionEffect(PotionEffectType.SLOW);
+		}
 		for (Player p : Bukkit.getOnlinePlayers()) {
 
 			p.kickPlayer("§7Сервер перезагружается! Пожалуйста, переподключитесь.");
@@ -244,6 +290,16 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 		}
 
 	}
-	
+
+	public static void saveItemsData() {
+
+		try {
+			items.save(itemsfile);
+
+		} catch (IOException r) {
+			r.printStackTrace();
+		}
+
+	}
 
 }

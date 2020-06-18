@@ -1,0 +1,32 @@
+Data:
+  '0':
+    ==: org.bukkit.inventory.ItemStack
+    type: AIR
+  '2':
+    ==: org.bukkit.inventory.ItemStack
+    type: GOLD_HELMET
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §eШлем героя
+      lore:
+      - §aЭтот шлем был найден в секретных пещерах
+      - ''
+      - §aСила этого §5артефакта §aбезгранична!!!
+      - ''
+      - §aЕго яркий §eсвет §aспособен ослепить любого!
+      internal: H4sIAAAAAAAAAONiYOBi4HIuLS7Jzw1JTC9mY+D2TUzPTA7OyEzNSXEQYQADNgZRp5zMvJS81OJi17S01OQS54zEvORUB08HqLyAS2JuYnqqY1JxflFBSWZ+noMlTCufb2JeYlBqemqeU35+cYmDZQNUQhjNzJDM3FSEjQIgbcEl+UVAYyEakw5A5BgAXeSif7UAAAA=
+  '3':
+    ==: org.bukkit.inventory.ItemStack
+    type: GOLD_SWORD
+    meta:
+      ==: ItemMeta
+      meta-type: UNSPECIFIC
+      display-name: §eЭкскалибур
+      lore:
+      - §aЛегендарный меч из камня!
+      - ''
+      - §aСпособен бить с невероятной силой, исцелять носителя и отравлять врагов!
+      - ''
+      - §aС небольшим шансом может §cподжечь §aврага на 15 секунд!
+      internal: H4sIAAAAAAAAAG2PwQqCQBCG5+TBg0hY9AbdutS9RSuIEKSEzouMupC7sLNRxx67Y5SrreRcv/lm/t8H8MFPbmRUk/OKPAhSIbe84RXGSpFha/iOB9PzVd0lEu3KEguToS5QGnZ8Wh5ehKlRtzQXDbKoUycuSmouC9y8OhjshUbHWvbW8OHwZPiz2oNs0aHZCSuUqLkRSo66mRI0joKUP9z2hz6M69iPffVomNTijFaf8WD+H8iu2K4Ab1JuU22IAQAA
