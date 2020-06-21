@@ -1,0 +1,8 @@
+Лучник:
+  info: 'Класс по умолчанию\\можно менять'
+  item: BOW
+  defaultheal: 20.5
+  changehealtolvl: 5.5
+  defaultmana: 10.5
+  changemanatolvl: 10.5
+  manapersecond: 2.5

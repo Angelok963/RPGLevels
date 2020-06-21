@@ -1,5 +1,6 @@
 package angelok.RPGLevels.com;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.Bukkit;
@@ -7,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
@@ -15,6 +17,58 @@ import org.bukkit.potion.PotionEffectType;
 import angelok.RPGLevels.com.baseAttributes.DefaultAttributes;
 
 public class Utilities {
+	
+	public static Inventory getPageMenu(int page, int maxpage, String title, ArrayList<ItemStack> item) {
+
+		if (page > maxpage)
+			page = maxpage;
+
+		Inventory inv = Bukkit.createInventory(null, 54, title);
+
+		ItemStack holder = Utilities.getButton(" ", (short) 15);
+
+		for (int a = 0; a < 9; a++) {
+			inv.setItem(a, holder);
+		}
+
+		for (int a = 45; a < 54; a++) {
+			inv.setItem(a, holder);
+		}
+
+		if (page > 1)
+			inv.setItem(46, Utilities.getButton(Lang.creativemenuundo(), (short) 5));
+		else
+			inv.setItem(46, Utilities.getButton(" ", (short) 14));
+
+		if (page < maxpage)
+			inv.setItem(52, Utilities.getButton(Lang.creativemenunext(), (short) 5));
+		else
+			inv.setItem(52, Utilities.getButton(" ", (short) 14));
+
+		int s = 0;
+		if (page != 1)
+			s = 1;
+
+		for (int a = 0 + s; a <= 36 + s; a++) {
+
+			int n = (page - 1) * 36 + a;
+			if (item.size() > n) {
+				ItemStack i = item.get(n);
+				if (i != null) {
+					int empty = 0;
+
+					while (inv.getItem(empty) != null)
+						empty++;
+
+					inv.setItem(empty, i);
+
+				}
+			}
+		}
+
+		return inv;
+	}
+
 
 	public static void loadDataItemsYML(YamlConfiguration items) {
 		RPGLevels.items = items;

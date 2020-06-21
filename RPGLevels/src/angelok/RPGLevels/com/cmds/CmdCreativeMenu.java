@@ -3,7 +3,6 @@ package angelok.RPGLevels.com.cmds;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -32,60 +31,7 @@ public class CmdCreativeMenu implements Listener {
 
 	public CmdCreativeMenu(YamlConfiguration items) {
 		CmdCreativeMenu.items = items;
-	}
 
-	public static Inventory getPage(int page) {
-
-		int maxpage = (item.size() - 1) / 36;
-		maxpage++;
-
-		if (page > maxpage)
-			page = maxpage;
-
-		Inventory inv = Bukkit.createInventory(null, 54, Lang.creativemenutitle());
-
-		ItemStack holder = Utilities.getButton(" ", (short) 15);
-
-		for (int a = 0; a < 9; a++) {
-			inv.setItem(a, holder);
-		}
-
-		for (int a = 45; a < 54; a++) {
-			inv.setItem(a, holder);
-		}
-
-		if (page > 1)
-			inv.setItem(46, Utilities.getButton(Lang.creativemenuundo(), (short) 5));
-		else
-			inv.setItem(46, Utilities.getButton(" ", (short) 14));
-
-		if (page < maxpage)
-			inv.setItem(52, Utilities.getButton(Lang.creativemenunext(), (short) 5));
-		else
-			inv.setItem(52, Utilities.getButton(" ", (short) 14));
-
-		int s = 0;
-		if (page != 1)
-			s = 1;
-
-		for (int a = 0 + s; a <= 36 + s; a++) {
-
-			int n = (page - 1) * 36 + a;
-			if (item.size() > n) {
-				ItemStack i = item.get(n);
-				if (i != null) {
-					int empty = 0;
-
-					while (inv.getItem(empty) != null)
-						empty++;
-
-					inv.setItem(empty, i);
-
-				}
-			}
-		}
-
-		return inv;
 	}
 
 	public static boolean creative(CommandSender sender) {
@@ -112,7 +58,10 @@ public class CmdCreativeMenu implements Listener {
 
 		pageId.put(((Player) sender), 1);
 		CmdCreativeMenu.item = item;
-		((Player) sender).openInventory(getPage(1));
+
+		int maxpage = (item.size() - 1) / 36;
+		maxpage++;
+		((Player) sender).openInventory(Utilities.getPageMenu(1, maxpage, Lang.creativemenutitle(), CmdCreativeMenu.item));
 		return true;
 	}
 
@@ -152,11 +101,15 @@ public class CmdCreativeMenu implements Listener {
 
 		if (click.isSimilar(Utilities.getButton(Lang.creativemenuundo(), (short) 5))) {
 
-			p.openInventory(getPage(pageId.get(p) - 1));
+			int maxpage = (item.size() - 1) / 36;
+			maxpage++;
+			p.openInventory(Utilities.getPageMenu(1, maxpage, Lang.creativemenutitle(), CmdCreativeMenu.item));
 			pageId.put(p, pageId.get(p) - 1);
 			return;
 		} else if (click.isSimilar(Utilities.getButton(Lang.creativemenunext(), (short) 5))) {
-			p.openInventory(getPage(pageId.get(p) + 1));
+			int maxpage = (item.size() - 1) / 36;
+			maxpage++;
+			p.openInventory(Utilities.getPageMenu(1, maxpage, Lang.creativemenutitle(), CmdCreativeMenu.item));
 			pageId.put(p, pageId.get(p) + 1);
 			return;
 		}
@@ -224,7 +177,7 @@ public class CmdCreativeMenu implements Listener {
 
 			int open = (maxpage > pageId.get(p)) ? pageId.get(p) : maxpage;
 
-			p.openInventory(getPage(open));
+			p.openInventory(Utilities.getPageMenu(open, maxpage, Lang.creativemenutitle(), CmdCreativeMenu.item));
 
 			return;
 
@@ -255,7 +208,7 @@ public class CmdCreativeMenu implements Listener {
 
 				int open2 = (maxpage2 > pageId.get(p)) ? pageId.get(p) : maxpage2;
 
-				p.openInventory(getPage(open2));
+				p.openInventory(Utilities.getPageMenu(open2, maxpage2, Lang.creativemenutitle(), CmdCreativeMenu.item));
 
 			}
 
@@ -265,6 +218,5 @@ public class CmdCreativeMenu implements Listener {
 		}
 
 	}
-	
 
 }

@@ -74,6 +74,11 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 
 		saveResource("Data" + File.separator + "customitems.yml", false);
 
+		// загрузка языкового файла
+
+		saveResource("lang.yml", false);
+		
+		
 		RPGLevels.plugin = this;
 		langfile = filelang;
 		pdata = playerdata;
@@ -89,10 +94,7 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 		RPGLevels.datap = datap;
 		RPGLevels.items = items;
 
-		// загрузка языкового файла
-
-		if (!langfile.exists())
-			Lang.loadDefautlLang();
+		
 
 		// Если конфиг не существует достаём его из jar и сохраняем
 		File config = new File(getDataFolder() + File.separator + "config.yml");
@@ -106,23 +108,12 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 		switch (getConfig().getString("StorageType")) {
 		case "file":
 
-			if (!classdata.exists()) {
-				saveClassData();
-				classes.set("Лучник.info", "Класс по умолчанию\\можно менять");
-				classes.set("Лучник.item", "BOW");
-				classes.set("Лучник.defaultheal", 20.5);
-				classes.set("Лучник.changehealtolvl", 5.5);
-				classes.set("Лучник.defaultmana", 10.5);
-				classes.set("Лучник.changemanatolvl", 10.5);
-				classes.set("Лучник.manapersecond", 2.5);
+			if (!classdata.exists()) 
+				saveResource("Data" + File.separator + "classes.yml", false);
 
-				saveClassData();
-
-			}
-
-			if (!pdata.exists()) {
+			if (!pdata.exists()) 
 				savePlayerData();
-			}
+			
 			RPGLevels.classes = classes;
 
 			RPGLevels.datap = datap;
