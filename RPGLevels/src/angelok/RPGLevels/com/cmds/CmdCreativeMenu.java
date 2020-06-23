@@ -103,13 +103,13 @@ public class CmdCreativeMenu implements Listener {
 
 			int maxpage = (item.size() - 1) / 36;
 			maxpage++;
-			p.openInventory(Utilities.getPageMenu(1, maxpage, Lang.creativemenutitle(), CmdCreativeMenu.item));
+			p.openInventory(Utilities.getPageMenu(pageId.get(p)-1, maxpage, Lang.creativemenutitle(), CmdCreativeMenu.item));
 			pageId.put(p, pageId.get(p) - 1);
 			return;
 		} else if (click.isSimilar(Utilities.getButton(Lang.creativemenunext(), (short) 5))) {
 			int maxpage = (item.size() - 1) / 36;
 			maxpage++;
-			p.openInventory(Utilities.getPageMenu(1, maxpage, Lang.creativemenutitle(), CmdCreativeMenu.item));
+			p.openInventory(Utilities.getPageMenu(pageId.get(p)+1, maxpage, Lang.creativemenutitle(), CmdCreativeMenu.item));
 			pageId.put(p, pageId.get(p) + 1);
 			return;
 		}

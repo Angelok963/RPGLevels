@@ -1,5 +1,7 @@
 package angelok.RPGLevels.com;
 
+import java.util.HashMap;
+
 public class RPGPlayer {
 
 	private int lvl;
@@ -9,8 +11,9 @@ public class RPGPlayer {
 	private String pclass;
 	private double heal;
 	private double lastheal;
+	private HashMap<String, Integer> skill = new HashMap<>();
 	
-	public RPGPlayer(int lvl, double mana, int exp, int skills, String pclass, double heal, double lastheal){
+	public RPGPlayer(int lvl, double mana, int exp, int skills, String pclass, double heal, double lastheal, HashMap<String, Integer> skill){
 		this.exp = exp;
 		this.heal = heal;
 		this.lastheal = lastheal;
@@ -18,7 +21,17 @@ public class RPGPlayer {
 		this.mana = mana;
 		this.pclass = pclass;
 		this.skills = skills;
+		this.skill = skill;
 	}
+	
+	public int getLvlSkill(String skillname) {
+		return (skill.get(skillname) != null) ? skill.get(skillname) : 0;
+	}
+
+	public void setLvlSkill(String skillname, int lvl) {
+		this.skill.put(skillname, lvl);
+	}
+	
 	
 	public double getHeal() {
 		return heal;

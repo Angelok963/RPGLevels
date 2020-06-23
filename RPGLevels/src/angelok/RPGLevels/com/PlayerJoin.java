@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,11 +16,13 @@ public class PlayerJoin implements Listener {
 	private RPGLevels plugin;
 	private  HashMap<Player, RPGPlayer> rpg;
 	private  HashMap<String, RPGClasses> rpgclass;
+	private YamlConfiguration skillscfg;
 
-	public PlayerJoin(RPGLevels plugin, HashMap<Player, RPGPlayer> rpg, HashMap<String, RPGClasses> rpgclass) {
+	public PlayerJoin(RPGLevels plugin, HashMap<Player, RPGPlayer> rpg, HashMap<String, RPGClasses> rpgclass, YamlConfiguration skillscfg) {
 		this.plugin = plugin;
 		this.rpg = rpg;
 		this.rpgclass = rpgclass;
+		this.skillscfg= skillscfg;
 	}
 
 	@EventHandler
@@ -29,9 +32,11 @@ public class PlayerJoin implements Listener {
 
 		if (!DataManager.getPlayers().contains(player)) {
 
-			rpg.put(p, new RPGPlayer(0, 0, 0, 0, "", 20.0, 20.0));
+			HashMap<String, Integer> skill = new HashMap<>();
+			
+			rpg.put(p, new RPGPlayer(0, 0, 0, 0, "", 20.0, 20.0, skill));
 
-			DataManager.savePlayerData(p, rpg);
+			DataManager.savePlayerData(p, rpg, skillscfg);
 
 			String[] loc = plugin.getConfig().getString("firstspawn").split(":");
 
@@ -42,7 +47,7 @@ public class PlayerJoin implements Listener {
 
 			p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(DataManager.getPlayerDataDouble(player, "heal"));
 
-			 DataManager.loadPlayerData(p, rpg);
+			 DataManager.loadPlayerData(p, rpg, skillscfg);
 
 			p.setLevel(DataManager.getPlayerDataInt(player, "lvl"));
 			new LevelUp(plugin, rpgclass, rpg).VisualLVL(p);

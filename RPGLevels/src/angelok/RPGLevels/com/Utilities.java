@@ -15,9 +15,10 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import angelok.RPGLevels.com.baseAttributes.DefaultAttributes;
+import angelok.RPGLevels.com.skills.SelectSkill;
 
 public class Utilities {
-	
+
 	public static Inventory getPageMenu(int page, int maxpage, String title, ArrayList<ItemStack> item) {
 
 		if (page > maxpage)
@@ -69,11 +70,16 @@ public class Utilities {
 		return inv;
 	}
 
+	public static void loadSkillsCfg(YamlConfiguration skillscfg) {
+		RPGLevels.skillscfg = skillscfg;
+		SelectSkill.updateSkillsCfg(skillscfg);
+
+	}
 
 	public static void loadDataItemsYML(YamlConfiguration items) {
 		RPGLevels.items = items;
 	}
-	
+
 	public static void loadDataPlayerYML(YamlConfiguration datap) {
 		RPGLevels.datap = datap;
 	}
@@ -120,7 +126,7 @@ public class Utilities {
 	public static void addEffect(Player p, PotionEffectType type, int time) {
 
 		time *= 20;
-		
+
 		if (p.hasPotionEffect(type)) {
 			time += p.getPotionEffect(type).getDuration();
 			p.removePotionEffect(type);
@@ -130,11 +136,11 @@ public class Utilities {
 		p.addPotionEffect(new PotionEffect(type, time, 0));
 
 	}
-	
+
 	public static void addEffect(LivingEntity p, PotionEffectType type, int time) {
 
 		time *= 20;
-		
+
 		if (p.hasPotionEffect(type)) {
 			time += p.getPotionEffect(type).getDuration();
 			p.removePotionEffect(type);
@@ -144,7 +150,7 @@ public class Utilities {
 		p.addPotionEffect(new PotionEffect(type, time, 0));
 
 	}
-	
+
 	public static ItemStack getButton(String name, short data) {
 
 		ItemStack i = new ItemStack(Material.STAINED_GLASS_PANE);

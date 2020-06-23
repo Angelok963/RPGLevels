@@ -110,7 +110,7 @@ public class CmdClass implements CommandExecutor, Listener {
 
 						for (int b = 0; b < z.length; b++)
 							if (!z[b].isEmpty())
-								lore.add(ChatColor.translateAlternateColorCodes('&', z[b]));
+								lore.add(ChatColor.translateAlternateColorCodes('&', ChatColor.RESET +  z[b]));
 
 						m.setLore(lore);
 

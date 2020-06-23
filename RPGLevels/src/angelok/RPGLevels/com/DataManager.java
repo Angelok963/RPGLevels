@@ -6,21 +6,73 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.bukkit.attribute.Attribute;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 public class DataManager {
 
 	private static String type = RPGLevels.plugin.getConfig().getString("StorageType");
 
+	public static void setPlayerSkillLvl(String player, String skillname, int lvl) {
+
+		if (type.equals("file")) {
+
+			RPGLevels.datap.set(player + ".lvlskills." + skillname, lvl);
+			RPGLevels.savePlayerData();
+			return;
+
+		} else {
+
+			try {
+				SQLConnection.runQuery("ALTER TABLE players ADD COLUMN " + skillname + " INT NOT NULL DEFAULT 0;");
+			} catch (SQLException e) {
+			}
+
+			try {
+				SQLConnection.runQuery(
+						"UPDATE players SET " + skillname + " = '" + lvl + "' WHERE name = '" + player + "';");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return;
+		}
+
+	}
+
+	public static int getPlayerSkillLvl(String player, String skillname) {
+
+		if (type.equals("file")) {
+			return RPGLevels.datap.getInt(player + ".lvlskills." + skillname);
+
+		} else {
+
+			try {
+				SQLConnection.runQuery("ALTER TABLE players ADD COLUMN " + skillname + " INT NOT NULL DEFAULT 0;");
+			} catch (SQLException e) {
+			}
+
+			try {
+				ResultSet res = SQLConnection
+						.getResult("SELECT " + skillname + " FROM players WHERE name='" + player + "';");
+
+				res.next();
+				return res.getInt(1);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return 0;
+		}
+	}
+
 	public static void setPlayerData(String player, String DataName, String value) {
 
-                  if(type.equals("file")){
+		if (type.equals("file")) {
 
 			RPGLevels.datap.set(player + "." + DataName, value);
 			RPGLevels.savePlayerData();
 			return;
 
-                  }else {
+		} else {
 			try {
 				ResultSet r = SQLConnection.getResult("SELECT count(*) FROM players WHERE name = '" + player + "';");
 				r.next();
@@ -42,13 +94,13 @@ public class DataManager {
 
 	public static void setPlayerData(String player, String DataName, int value) {
 
-		if(type.equals("file")){
+		if (type.equals("file")) {
 
 			RPGLevels.datap.set(player + "." + DataName, value);
 			RPGLevels.savePlayerData();
 			return;
 
-		}else {
+		} else {
 			try {
 				ResultSet r = SQLConnection.getResult("SELECT count(*) FROM players WHERE name = '" + player + "';");
 				r.next();
@@ -69,13 +121,13 @@ public class DataManager {
 
 	public static void setPlayerData(String player, String DataName, double value) {
 
-		if(type.equals("file")){
+		if (type.equals("file")) {
 
 			RPGLevels.datap.set(player + "." + DataName, value);
 			RPGLevels.savePlayerData();
 			return;
 
-		}else {
+		} else {
 			try {
 				ResultSet r = SQLConnection.getResult("SELECT count(*) FROM players WHERE name = '" + player + "';");
 				r.next();
@@ -96,11 +148,11 @@ public class DataManager {
 
 	public static int getPlayerDataInt(String player, String DataName) {
 
-		if(type.equals("file")){
+		if (type.equals("file")) {
 
 			return RPGLevels.datap.getInt(player + "." + DataName);
 
-		}else {
+		} else {
 			try {
 				ResultSet res = SQLConnection
 						.getResult("SELECT " + DataName + " FROM players WHERE name='" + player + "';");
@@ -116,10 +168,10 @@ public class DataManager {
 
 	public static double getPlayerDataDouble(String player, String DataName) {
 
-		if(type.equals("file")){
+		if (type.equals("file")) {
 			return RPGLevels.datap.getDouble(player + "." + DataName);
 
-		}else {
+		} else {
 			try {
 				ResultSet res = SQLConnection
 						.getResult("SELECT " + DataName + " FROM players WHERE name='" + player + "';");
@@ -135,11 +187,11 @@ public class DataManager {
 
 	public static String getPlayerDataString(String player, String DataName) {
 
-		if(type.equals("file")){
+		if (type.equals("file")) {
 
 			return RPGLevels.datap.getString(player + "." + DataName);
 
-		}else {
+		} else {
 			try {
 				ResultSet res = SQLConnection
 						.getResult("SELECT " + DataName + " FROM players WHERE name='" + player + "';");
@@ -155,7 +207,7 @@ public class DataManager {
 
 	public static ArrayList<String> getPlayers() {
 
-		if(type.equals("file")){
+		if (type.equals("file")) {
 
 			ArrayList<String> l = new ArrayList<>();
 
@@ -163,7 +215,7 @@ public class DataManager {
 				l.add(s);
 			return l;
 
-		}else {
+		} else {
 
 			ArrayList<String> name = new ArrayList<>();
 			try {
@@ -181,13 +233,13 @@ public class DataManager {
 
 	public static void setClassData(String classname, String DataName, String value) {
 
-		if(type.equals("file")){
+		if (type.equals("file")) {
 
 			RPGLevels.classes.set(classname + "." + DataName, value);
 			RPGLevels.saveClassData();
 			return;
 
-		}else {
+		} else {
 			try {
 				ResultSet r = SQLConnection
 						.getResult("SELECT count(*) FROM classes WHERE classname = '" + classname + "';");
@@ -211,13 +263,13 @@ public class DataManager {
 
 	public static void setClassData(String classname, String DataName, int value) {
 
-		if(type.equals("file")){
+		if (type.equals("file")) {
 
 			RPGLevels.classes.set(classname + "." + DataName, value);
 			RPGLevels.saveClassData();
 			return;
 
-		}else {
+		} else {
 			try {
 				ResultSet r = SQLConnection
 						.getResult("SELECT count(*) FROM classes WHERE classname = '" + classname + "';");
@@ -241,13 +293,13 @@ public class DataManager {
 
 	public static void setClassData(String classname, String DataName, double value) {
 
-		if(type.equals("file")){
+		if (type.equals("file")) {
 
 			RPGLevels.classes.set(classname + "." + DataName, value);
 			RPGLevels.saveClassData();
 			return;
 
-		}else {
+		} else {
 			try {
 				ResultSet r = SQLConnection
 						.getResult("SELECT count(*) FROM classes WHERE classname = '" + classname + "';");
@@ -271,11 +323,11 @@ public class DataManager {
 
 	public static String getClassDataString(String classname, String DataName) {
 
-		if(type.equals("file")){
+		if (type.equals("file")) {
 
 			return RPGLevels.classes.getString(classname + "." + DataName);
 
-		}else {
+		} else {
 			try {
 				ResultSet res = SQLConnection
 						.getResult("SELECT " + DataName + " FROM classes WHERE classname='" + classname + "';");
@@ -291,11 +343,11 @@ public class DataManager {
 
 	public static int getClassDataInt(String classname, String DataName) {
 
-		if(type.equals("file")){
+		if (type.equals("file")) {
 
 			return RPGLevels.classes.getInt(classname + "." + DataName);
 
-		}else {
+		} else {
 			try {
 				ResultSet res = SQLConnection
 						.getResult("SELECT " + DataName + " FROM classes WHERE classname='" + classname + "';");
@@ -311,11 +363,11 @@ public class DataManager {
 
 	public static double getClassDataDouble(String classname, String DataName) {
 
-		if(type.equals("file")){
+		if (type.equals("file")) {
 
 			return RPGLevels.classes.getDouble(classname + "." + DataName);
 
-		}else {
+		} else {
 			try {
 				ResultSet res = SQLConnection
 						.getResult("SELECT " + DataName + " FROM classes WHERE classname='" + classname + "';");
@@ -331,7 +383,7 @@ public class DataManager {
 
 	public static ArrayList<String> getClasses() {
 
-		if(type.equals("file")){
+		if (type.equals("file")) {
 
 			ArrayList<String> l = new ArrayList<>();
 
@@ -339,7 +391,7 @@ public class DataManager {
 				l.add(s);
 			return l;
 
-		}else {
+		} else {
 
 			ArrayList<String> name = new ArrayList<>();
 			try {
@@ -357,13 +409,13 @@ public class DataManager {
 
 	public static void RemoveClass(String classname) {
 
-		if(type.equals("file")){
+		if (type.equals("file")) {
 
 			RPGLevels.classes.set(classname, null);
 			RPGLevels.saveClassData();
 			return;
 
-		}else {
+		} else {
 			try {
 				ResultSet r = SQLConnection
 						.getResult("SELECT count(*) FROM classes WHERE classname = '" + classname + "';");
@@ -380,16 +432,16 @@ public class DataManager {
 
 	}
 
-	public static void savePlayerData(Player p, HashMap<Player, RPGPlayer> rpgp) {
+	public static void savePlayerData(Player p, HashMap<Player, RPGPlayer> rpgp, YamlConfiguration skillscfg) {
 		RPGPlayer rpg = rpgp.get(p);
 		String player = p.getName();
-		
+
 		double maxheal = rpg.getHeal();
-		
+
 		double lastheal = rpg.getLastheal();
-		if(lastheal > maxheal)
-		lastheal = maxheal;
-		
+		if (lastheal > maxheal)
+			lastheal = maxheal;
+
 		setPlayerData(player, "exp", rpg.getExp());
 		setPlayerData(player, "heal", maxheal);
 		setPlayerData(player, "lastheal", lastheal);
@@ -397,29 +449,40 @@ public class DataManager {
 		setPlayerData(player, "mana", rpg.getMana());
 		setPlayerData(player, "class", rpg.getPclass());
 		setPlayerData(player, "skills", rpg.getSkills());
+		
+		for(String key : skillscfg.getConfigurationSection("Skills").getKeys(false))
+			setPlayerSkillLvl(player, key, rpg.getLvlSkill(key));
+		
 
 	}
 
-	public static HashMap<Player, RPGPlayer> loadPlayerData(Player p, HashMap<Player, RPGPlayer> rpg) {
+	public static HashMap<Player, RPGPlayer> loadPlayerData(Player p, HashMap<Player, RPGPlayer> rpg, YamlConfiguration skillscfg) {
 
 		String player = p.getName();
 
 		double maxheal = DataManager.getPlayerDataDouble(player, "heal");
 		double lastheal = DataManager.getPlayerDataDouble(player, "lastheal");
-		if(lastheal > maxheal)
+		if (lastheal > maxheal)
 			lastheal = maxheal;
-		
+
 		p.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxheal);
 
 		p.setHealth(lastheal);
 		p.setLevel(DataManager.getPlayerDataInt(player, "lvl"));
 
-
+		
+	   HashMap<String, Integer> skill = new HashMap<>();
+		for(String key : skillscfg.getConfigurationSection("Skills").getKeys(false)) 
+			skill.put(key, DataManager.getPlayerSkillLvl(player, key));
+		
+	   
+	   
 		rpg.put(p, new RPGPlayer(DataManager.getPlayerDataInt(player, "lvl"),
 				DataManager.getPlayerDataDouble(player, "mana"), DataManager.getPlayerDataInt(player, "exp"),
 				DataManager.getPlayerDataInt(player, "skills"), DataManager.getPlayerDataString(player, "class"),
-				DataManager.getPlayerDataDouble(player, "heal"), DataManager.getPlayerDataDouble(player, "lastheal")));
-return rpg;
+				DataManager.getPlayerDataDouble(player, "heal"), DataManager.getPlayerDataDouble(player, "lastheal"),
+				skill));
+		return rpg;
 	}
 
 	public static void saveClassData(String classname, HashMap<String, RPGClasses> rpgclass) {

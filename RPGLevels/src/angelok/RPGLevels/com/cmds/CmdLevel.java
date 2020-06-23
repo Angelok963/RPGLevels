@@ -27,23 +27,25 @@ public class CmdLevel implements CommandExecutor {
 	private RPGLevels plugin;
 	private HashMap<Player, RPGPlayer> rpgp;
 	private HashMap<String, RPGClasses> clas;
+	private YamlConfiguration skillscfg;
 	@SuppressWarnings("unused")
 	private YamlConfiguration lang;
-	private YamlConfiguration classes;
 	@SuppressWarnings("unused")
 	private YamlConfiguration datap;
 	private BukkitTask saveTask;
 	private BukkitTask f;
 
+	private final String s = File.separator;
+
 	public CmdLevel(RPGLevels plugin, HashMap<Player, RPGPlayer> rpgp, HashMap<String, RPGClasses> clas,
-			YamlConfiguration lang, YamlConfiguration classes, YamlConfiguration dataplayer, BukkitTask saveTask) {
+			YamlConfiguration lang, YamlConfiguration dataplayer, BukkitTask saveTask, YamlConfiguration skillscfg) {
 		this.plugin = plugin;
 		this.rpgp = rpgp;
 		this.clas = clas;
 		this.lang = lang;
-		this.classes = classes;
 		this.datap = dataplayer;
 		this.saveTask = saveTask;
+		this.skillscfg = skillscfg;
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String str, String[] args) {
@@ -102,38 +104,18 @@ public class CmdLevel implements CommandExecutor {
 			String old_data = plugin.getConfig().getString("StorageType");
 			plugin.reloadConfig();
 
-			Utilities.loadLangYML(YamlConfiguration
-					.loadConfiguration(new File(plugin.getDataFolder() + File.separator + "lang.yml")));
-
 			String new_data = plugin.getConfig().getString("StorageType");
-			if (new_data.equals("file")) {
-				File playerdata = new File(
-						plugin.getDataFolder() + File.separator + "Data" + File.separator + "players.yml");
-				File classdata = new File(
-						plugin.getDataFolder() + File.separator + "Data" + File.separator + "classes.yml");
-				if (!classdata.exists()) {
-					RPGLevels.saveClassData();
-					this.classes.set("Лучник.info", "Класс по умолчанию\\nможно менять");
-					this.classes.set("Лучник.item", "BOW");
-					this.classes.set("Лучник.defaultheal", 20.5);
-					this.classes.set("Лучник.changehealtolvl", 5.5);
-					this.classes.set("Лучник.defaultmana", 10.5);
-					this.classes.set("Лучник.changemanatolvl", 10.5);
-					this.classes.set("Лучник.manapersecond", 2.5);
-					RPGLevels.saveClassData();
-				}
-				if (!playerdata.exists()) {
-					RPGLevels.savePlayerData();
-				}
+			
+			Utilities.loadLangYML(
+					YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + s + "lang.yml")));
 
-				Utilities.loadDataItemsYML(YamlConfiguration.loadConfiguration(new File(
-						plugin.getDataFolder() + File.separator + "Data" + File.separator + "customitems.yml")));
+			Utilities.loadDataItemsYML(YamlConfiguration
+					.loadConfiguration(new File(plugin.getDataFolder() + s + "Data" + s + "customitems.yml")));
 
-				Utilities.loadDataPlayerYML(YamlConfiguration.loadConfiguration(
-						new File(plugin.getDataFolder() + File.separator + "Data" + File.separator + "players.yml")));
-				Utilities.loadDataClassesYML(YamlConfiguration.loadConfiguration(
-						new File(plugin.getDataFolder() + File.separator + "Data" + File.separator + "classes.yml")));
-			}
+			Utilities.loadSkillsCfg(
+					YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder() + s + "SkillsCfg.yml")));
+
+			
 			String msg = "";
 			if (old_data.equals(new_data)) {
 				msg = Lang.cfgreload();
@@ -157,8 +139,8 @@ public class CmdLevel implements CommandExecutor {
 					@Override
 					public void run() {
 
-						saveTask = new AutoSaveData(plugin, clas, rpgp).runTaskTimerAsynchronously(plugin, 0L,
-								(plugin.getConfig().getInt("AutoSaveDataModule.period") * 1200));
+						saveTask = new AutoSaveData(plugin, clas, rpgp, skillscfg).runTaskTimerAsynchronously(plugin,
+								0L, (plugin.getConfig().getInt("AutoSaveDataModule.period") * 1200));
 
 					}
 				}, (plugin.getConfig().getInt("AutoSaveDataModule.period") * 1200));
@@ -449,7 +431,7 @@ public class CmdLevel implements CommandExecutor {
 				DataManager.saveClassData(classname, clas);
 			}
 			for (Player player : Bukkit.getOnlinePlayers()) {
-				DataManager.savePlayerData(player, rpgp);
+				DataManager.savePlayerData(player, rpgp, skillscfg);
 			}
 
 			RPGLevels.saveItemsData();
@@ -464,17 +446,17 @@ public class CmdLevel implements CommandExecutor {
 			sender.sendMessage(Lang.cmd_sync_start());
 
 			if (plugin.getConfig().getString("StorageType").equals("file")) {
-				Utilities.loadDataPlayerYML(YamlConfiguration.loadConfiguration(
-						new File(plugin.getDataFolder() + File.separator + "Data" + File.separator + "players.yml")));
-				Utilities.loadDataClassesYML(YamlConfiguration.loadConfiguration(
-						new File(plugin.getDataFolder() + File.separator + "Data" + File.separator + "classes.yml")));
+				Utilities.loadDataPlayerYML(YamlConfiguration
+						.loadConfiguration(new File(plugin.getDataFolder() + s + "Data" + s + "players.yml")));
+				Utilities.loadDataClassesYML(YamlConfiguration
+						.loadConfiguration(new File(plugin.getDataFolder() + s + "Data" + s + "classes.yml")));
 			}
 
 			for (String classname : clas.keySet()) {
 				clas = DataManager.loadClassData(classname, clas);
 			}
 			for (Player player : Bukkit.getOnlinePlayers()) {
-				rpgp = DataManager.loadPlayerData(player, rpgp);
+				rpgp = DataManager.loadPlayerData(player, rpgp, skillscfg);
 
 			}
 			for (Player p : Bukkit.getOnlinePlayers())
