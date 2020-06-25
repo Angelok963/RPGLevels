@@ -137,9 +137,12 @@ public class SelectSkill implements Listener {
 
 		String clas = rpgplayer.getPclass();
 
+		
 		if (!skillscfg.getStringList("Skills." + name + ".ClassUsage").contains(clas))
 			return;
 
+		
+		
 		PlayerInventory in = p.getInventory();
 
 		switch (a) {
@@ -213,6 +216,10 @@ public class SelectSkill implements Listener {
 			meta.setDisplayName(name);
 			ArrayList<String> lore = new ArrayList<>();
 
+			int lvl = rpgplayer.getLvlSkill(skill);
+
+			List<Integer> cost = skillscfg.getIntegerList("Skills." + skill + ".CostUpgrade");
+
 			lore.add("§7=====( §c" + Lang.skillinfo() + " §7)=====");
 
 			for (String l : skillscfg.getStringList("Skills." + skill + ".Info"))
@@ -220,11 +227,18 @@ public class SelectSkill implements Listener {
 
 			lore.add("§7================================");
 
-			int lvl = rpgplayer.getLvlSkill(skill);
-
-			List<Integer> cost = skillscfg.getIntegerList("Skills." + skill + ".CostUpgrade");
-
 			int maxlvl = cost.size();
+
+			if (lvl != 0) {
+				lore.add(Lang.skillsmenuinfo4().replace("{consume}",
+						String.valueOf(skillscfg.getDoubleList("Skills." + skill + ".ManaCost").get(lvl - 1))));
+
+				lore.add(Lang.skillsmenuinfo5().replace("{damage}",
+						String.valueOf(skillscfg.getDoubleList("Skills." + skill + ".DamageUpgrade").get(lvl - 1))));
+
+				lore.add(Lang.skillsmenuinfo6().replace("{cooldown}",
+						String.valueOf(skillscfg.getInt("Skills." + skill + ".Cooldown"))));
+			}
 
 			if (lvl == 0)
 				lore.add(Lang.skillinfo_lvl_not());

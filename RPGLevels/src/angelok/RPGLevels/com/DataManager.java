@@ -22,15 +22,20 @@ public class DataManager {
 			return;
 
 		} else {
-
 			try {
-				SQLConnection.runQuery("ALTER TABLE players ADD COLUMN " + skillname + " INT NOT NULL DEFAULT 0;");
-			} catch (SQLException e) {
+				ResultSet s = SQLConnection.c.getMetaData().getColumns(null, null, "players", skillname);
+
+				if (!s.next())
+					SQLConnection
+							.runQuery("ALTER TABLE players ADD COLUMN `" + skillname + "` INT NOT NULL DEFAULT 0;");
+
+			} catch (SQLException e1) {
+				e1.printStackTrace();
 			}
 
 			try {
 				SQLConnection.runQuery(
-						"UPDATE players SET " + skillname + " = '" + lvl + "' WHERE name = '" + player + "';");
+						"UPDATE players SET `" + skillname + "` = '" + lvl + "' WHERE name = '" + player + "';");
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
@@ -47,13 +52,18 @@ public class DataManager {
 		} else {
 
 			try {
-				SQLConnection.runQuery("ALTER TABLE players ADD COLUMN " + skillname + " INT NOT NULL DEFAULT 0;");
-			} catch (SQLException e) {
-			}
+				ResultSet s = SQLConnection.c.getMetaData().getColumns(null, null, "players", skillname);
 
+				if (!s.next())
+					SQLConnection
+							.runQuery("ALTER TABLE players ADD COLUMN `" + skillname + "` INT NOT NULL DEFAULT 0;");
+
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			try {
 				ResultSet res = SQLConnection
-						.getResult("SELECT " + skillname + " FROM players WHERE name='" + player + "';");
+						.getResult("SELECT `" + skillname + "` FROM players WHERE name='" + player + "';");
 
 				res.next();
 				return res.getInt(1);
@@ -449,14 +459,14 @@ public class DataManager {
 		setPlayerData(player, "mana", rpg.getMana());
 		setPlayerData(player, "class", rpg.getPclass());
 		setPlayerData(player, "skills", rpg.getSkills());
-		
-		for(String key : skillscfg.getConfigurationSection("Skills").getKeys(false))
+
+		for (String key : skillscfg.getConfigurationSection("Skills").getKeys(false))
 			setPlayerSkillLvl(player, key, rpg.getLvlSkill(key));
-		
 
 	}
 
-	public static HashMap<Player, RPGPlayer> loadPlayerData(Player p, HashMap<Player, RPGPlayer> rpg, YamlConfiguration skillscfg) {
+	public static HashMap<Player, RPGPlayer> loadPlayerData(Player p, HashMap<Player, RPGPlayer> rpg,
+			YamlConfiguration skillscfg) {
 
 		String player = p.getName();
 
@@ -470,13 +480,10 @@ public class DataManager {
 		p.setHealth(lastheal);
 		p.setLevel(DataManager.getPlayerDataInt(player, "lvl"));
 
-		
-	   HashMap<String, Integer> skill = new HashMap<>();
-		for(String key : skillscfg.getConfigurationSection("Skills").getKeys(false)) 
+		HashMap<String, Integer> skill = new HashMap<>();
+		for (String key : skillscfg.getConfigurationSection("Skills").getKeys(false))
 			skill.put(key, DataManager.getPlayerSkillLvl(player, key));
-		
-	   
-	   
+
 		rpg.put(p, new RPGPlayer(DataManager.getPlayerDataInt(player, "lvl"),
 				DataManager.getPlayerDataDouble(player, "mana"), DataManager.getPlayerDataInt(player, "exp"),
 				DataManager.getPlayerDataInt(player, "skills"), DataManager.getPlayerDataString(player, "class"),

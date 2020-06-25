@@ -36,6 +36,7 @@ import angelok.RPGLevels.com.cmds.CmdClassInfo;
 import angelok.RPGLevels.com.cmds.CmdClassRemove;
 import angelok.RPGLevels.com.cmds.CmdCreativeMenu;
 import angelok.RPGLevels.com.cmds.CmdLevel;
+import angelok.RPGLevels.com.skills.Projectile;
 import angelok.RPGLevels.com.skills.SelectSkill;
 
 public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsManager {
@@ -114,7 +115,7 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 			getConfig().options().copyDefaults(true);
 			saveDefaultConfig();
 			saveConfig();
-			getServer().getConsoleSender().sendMessage("§с(§eRPGLevels§с) §7Создан конфигурационный файл плагина.");
+			getServer().getConsoleSender().sendMessage("§c(§eRPGLevels§c) §7Создан конфигурационный файл плагина.");
 
 		}
 		switch (getConfig().getString("StorageType")) {
@@ -201,6 +202,7 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 		m.registerEvents(new MagicShield(rpg), this);
 		m.registerEvents(new CmdCreativeMenu(items), this);
 		m.registerEvents(new SelectSkill(rpg, skillscfg), this);
+		m.registerEvents(new Projectile(rpg, skillscfg, this), this);
 		getCommand("level").setExecutor(new CmdLevel(this, rpg, rpgclass, lang, datap, saveTask, skillscfg));
 		getCommand("class").setExecutor(new CmdClass(this, rpg, rpgclass));
 		getCommand("classcreate").setExecutor(new CmdClassCreate(rpgclass));
@@ -232,7 +234,7 @@ public class RPGLevels extends JavaPlugin implements RPGLevelsAPI, AttributsMana
 		}
 
 		getServer().getConsoleSender()
-				.sendMessage("§с(§eRPGLevels§с) §7Плагин успешно запущен. Используемый тип хранения данных: §c"
+				.sendMessage("§c(§eRPGLevels§c) §7Плагин успешно запущен. Используемый тип хранения данных: §c"
 						+ getConfig().getString("StorageType") + "§7Зарегистрировано §c"
 						+ ((list.size() != 0) ? list.size() : 1) + "§7 классов, §c"
 						+ skillscfg.getConfigurationSection("Skills").getKeys(false).size() + " §7скилов.");

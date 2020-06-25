@@ -15,6 +15,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import angelok.RPGLevels.com.baseAttributes.DefaultAttributes;
+import angelok.RPGLevels.com.skills.Projectile;
 import angelok.RPGLevels.com.skills.SelectSkill;
 
 public class Utilities {
@@ -73,6 +74,7 @@ public class Utilities {
 	public static void loadSkillsCfg(YamlConfiguration skillscfg) {
 		RPGLevels.skillscfg = skillscfg;
 		SelectSkill.updateSkillsCfg(skillscfg);
+		Projectile.updateSkillsCfg(skillscfg);
 
 	}
 

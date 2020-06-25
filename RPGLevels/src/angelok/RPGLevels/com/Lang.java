@@ -10,6 +10,32 @@ public class Lang {
 		return RPGLevels.lang.getString("prefix");
 	}
 
+	public static String cooldown() {
+		return ChatColor.translateAlternateColorCodes('&',
+				prefix() + RPGLevels.lang.getString("cooldown"));
+	}	
+	
+	
+	public static String notmana() {
+		return ChatColor.translateAlternateColorCodes('&',
+				prefix() + RPGLevels.lang.getString("notmana"));
+	}	
+	
+	public static String skillsmenuinfo6() {
+		return ChatColor.translateAlternateColorCodes('&',
+				ChatColor.RESET + RPGLevels.lang.getString("skillsmenuinfo6"));
+	}
+	
+	public static String skillsmenuinfo5() {
+		return ChatColor.translateAlternateColorCodes('&',
+				ChatColor.RESET + RPGLevels.lang.getString("skillsmenuinfo5"));
+	}
+	
+	public static String skillsmenuinfo4() {
+		return ChatColor.translateAlternateColorCodes('&',
+				ChatColor.RESET + RPGLevels.lang.getString("skillsmenuinfo4"));
+	}
+	
 	public static String not_skills() {
 		return ChatColor.translateAlternateColorCodes('&',
 				prefix() + RPGLevels.lang.getString("not_skills"));
