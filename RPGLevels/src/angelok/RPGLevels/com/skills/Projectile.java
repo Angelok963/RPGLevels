@@ -53,7 +53,7 @@ public class Projectile implements Listener {
 	public void onUse(PlayerInteractEvent e) {
 
 		ItemStack i = e.getItem();
-
+		
 		// Активируем скил на пкм
 		if (e.getAction() != Action.RIGHT_CLICK_AIR)
 			return;
